@@ -57,9 +57,9 @@ input {
   transform: scale(115%);
 }
 .checkbox.on div {
-  transform: scale(0%);
-}
-.checkbox.off div {
   transform: scale(100%);
+  }
+.checkbox.off div {
+  transform: scale(0%);
 }
 </style>
