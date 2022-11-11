@@ -1,0 +1,99 @@
+<template>
+  <header class="drag-block">
+    <nav class="top-nav">
+      <div class="nav-logo">
+        <router-link to="/">HOME:IN</router-link>
+      </div>
+
+      <div class="nav-container">
+        <router-link to="/about">서비스소개</router-link>
+        <router-link to="/apt">실거래가</router-link>
+        <router-link to="/news">부동산뉴스</router-link>
+        <router-link to="/notice">공지사항</router-link>
+        <router-link to="/user">마이페이지</router-link>
+      </div>
+
+      <div class="nav-user non-member">
+        <round-button text="회원가입" type="line" @event="move"></round-button>
+        <round-button text="로그인" @event="move"></round-button>
+      </div>
+    </nav>
+  </header>
+</template>
+
+<script>
+import RoundButton from "@/components/common/RoundButton";
+
+export default {
+  name: "TopNav",
+  components: { RoundButton },
+  methods: {
+    move() {
+      console.log("move");
+    },
+  },
+};
+</script>
+
+<style scoped>
+header {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid var(--gray);
+}
+.top-nav {
+  width: 1080px;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-logo a {
+  color: var(--navy);
+  margin: auto 10px;
+  font-size: 21px;
+  font-weight: 900;
+  text-decoration: none;
+  line-height: 50px;
+}
+
+.nav-container a {
+  color: var(--black);
+  margin: auto 10px;
+  padding: 10px;
+  font-size: 14px;
+  text-decoration: none;
+  line-height: 50px;
+}
+
+.nav-container a.router-link-exact-active {
+  font-weight: bolder;
+  color: var(--navy);
+  transform: scale(105%);
+}
+.nav-container a:hover {
+  font-weight: bolder;
+  color: var(--navy);
+  transform: scale(105%);
+}
+/* .nav-container a.router-link-exact-active::before {
+  content: "";
+  position: absolute;
+  background-color: var(--navy);
+  opacity: 10%;
+  margin-top: 5px;
+  margin-left: -10px;
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+} */
+.nav-user {
+  justify-items: flex-end;
+}
+.nav-user.non-member > * {
+  margin-left: 10px;
+}
+</style>
