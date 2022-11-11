@@ -22,7 +22,7 @@ div {
   height: 24px;
   border-radius: 15px;
   position: relative;
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
   transition: all 0.1s linear;
 }
 .on {
@@ -30,6 +30,7 @@ div {
 }
 .ball {
   transition: all 0.1s linear;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
 }
 .on::before {
   content: "ON";
@@ -46,7 +47,6 @@ div {
   height: 16px;
   background-color: var(--white);
   border-radius: 10px;
-  box-shadow: 0 0 4px var(--black);
   transform: translate(4px, 4px);
 }
 .on:hover .ball {
@@ -72,7 +72,6 @@ div {
   height: 16px;
   background-color: var(--white);
   border-radius: 10px;
-  box-shadow: 0 0 4px var(--black);
   transform: translate(calc(40px), 4px);
 }
 .off:hover .ball {
