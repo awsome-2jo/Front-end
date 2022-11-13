@@ -33,10 +33,14 @@ button {
   font-weight: 700;
   line-height: 28px;
   /* padding: 0 15px; */
+  transition: all 0.05s linear;
 }
 button.line {
   background-color: var(--white);
   color: var(--navy);
   border: 1px solid var(--navy);
+}
+button:hover, button:active {
+  transform: scale(105%);
 }
 </style>
