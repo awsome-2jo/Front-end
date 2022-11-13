@@ -3,6 +3,8 @@
   class="slider"
   ref="slider">
     <div class="range" :style="{left: `${getSize(min)}px`, width: `${getSize(max)-getSize(min)}px`}"></div>
+    <span style="left:-8px">최소</span>
+    <span style="right:-8px">최대</span>
     <div
     class="bounder min drag-block"
     @mousedown="mouseDownBounder(`min`)"
@@ -221,11 +223,15 @@ input::-webkit-inner-spin-button {
 input:focus {
   outline: none;
 }
-
 .range {
   position: absolute;
   height: 6px;
   border-radius: 3px;
   background-color: var(--navy);
+}
+span {
+  font-size: 10px;
+  position: absolute;
+  top: 35px;
 }
 </style>
