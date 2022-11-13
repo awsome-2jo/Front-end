@@ -73,7 +73,8 @@ export default {
       else if(this.target==="min" && this.max < this.min) this.target = "max";
 
       if($event.target!==$event.currentTarget) {
-        let temp = $event.clientX - 18;
+        console.dir($event.currentTarget)
+        let temp = $event.clientX - $event.currentTarget.offsetLeft;
         this[this.target] = this.getSize(temp);
       }
       else this[this.target] = $event.offsetX;
