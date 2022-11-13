@@ -107,7 +107,7 @@ export default {
 
     // 범위 체크 이벤트
     getSize(num) {
-      return num >= 0 ? num < 300 ? num : 300 : 0;
+      return num >= 0 ? num < 240 ? num : 240 : 0;
     }
   },
   computed: {
@@ -134,7 +134,7 @@ export default {
 }
 .slider {
   box-sizing: content-box;
-  width: 300px;
+  width: 240px;
   height: 6px;
   margin: 20px;
   padding: 20px 0;
@@ -181,6 +181,7 @@ export default {
 }
 .bounder:hover, .bounder:active  {
   transform: scale(110%);
+  z-index: 1;
 }
 
 .input-container {
