@@ -79,6 +79,10 @@ export default {
   -ms-user-select: none;
   user-select: none;
 }
+/* 스크롤 없는 페이지 */
+.non-scroll {
+  height: 100%;
+}
 
 body {
   margin: 0;
@@ -86,5 +90,15 @@ body {
   font-family: Inter;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+header {
+  top: 0;
+  background-color: var(--white);
+  z-index: 10000;
+  position: fixed;
+}
+main {
+  padding-top: 80px;
+  z-index: 1000;
 }
 </style>
