@@ -51,7 +51,7 @@ ul {
   height: 100%;
   padding: 0;
   /* background-color: var(--red); */
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 ul > li {
   list-style: none;
