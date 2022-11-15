@@ -13,6 +13,8 @@ export default new Vuex.Store({
     gugunList: [],
     dongList: [],
     regcode: "",
+
+    // TODO : add filtering state
   },
   getters: {},
   mutations: {

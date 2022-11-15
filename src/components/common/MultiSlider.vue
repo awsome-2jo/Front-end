@@ -1,30 +1,18 @@
 <template>
-  <div
-  class="slider"
-  ref="slider">
-    <div class="range" :style="{left: `${getSize(min)}px`, width: `${getSize(max)-getSize(min)}px`}"></div>
-    <span style="left:-8px">최소</span>
-    <span style="right:-8px">최대</span>
-    <div
-    class="bounder min drag-block"
-    @mousedown="mouseDownBounder(`min`)"
-    ref="min-bounder">
+  <div class="slider" ref="slider">
+    <div class="range" :style="{ left: `${getSize(min)}px`, width: `${getSize(max) - getSize(min)}px` }"></div>
+    <span style="left: -8px">최소</span>
+    <span style="right: -8px">최대</span>
+    <div class="bounder min drag-block" @mousedown="mouseDownBounder(`min`)" ref="min-bounder">
       <div class="ball"></div>
       <div class="ball-shadow"></div>
-      <div class="input-container">
-        <input type="number" :value="getMin" @change="setMin">{{unitText}}
-      </div>
+      <div class="input-container"><input type="number" :value="getMin" @change="setMin" />{{ unitText }}</div>
     </div>
 
-    <div
-    class="bounder max drag-block"
-    @mousedown="mouseDownBounder(`max`)"
-    ref="max-bounder">
+    <div class="bounder max drag-block" @mousedown="mouseDownBounder(`max`)" ref="max-bounder">
       <div class="ball"></div>
       <div class="ball-shadow"></div>
-      <div class="input-container">
-        <input type="number" :value="getMax" @change="setMax">{{unitText}}
-      </div>
+      <div class="input-container"><input type="number" :value="getMax" @change="setMax" />{{ unitText }}</div>
     </div>
   </div>
 </template>
@@ -44,17 +32,17 @@ export default {
       target: "",
       min: 0,
       max: 0,
-    }
+    };
   },
   mounted() {
-    console.log(this._max)
+    console.log(this._max);
     this.setMax(null, this._max);
     this.setMin(null, this._min);
   },
   watch: {
     request() {
-      if(this.request) this.$emit("set-value", this.min*this.unit, this.max*this.unit);
-    }
+      if (this.request) this.$emit("set-value", this.min * this.unit, this.max * this.unit);
+    },
   },
   methods: {
     // 슬라이더 이동 이벤트
@@ -71,34 +59,32 @@ export default {
       window.addEventListener("mouseup", this.mouseUpBounder);
     },
     mouseMoveBounder($event) {
-      if(this.target==="max" && this.max < this.min) this.target = "min";
-      else if(this.target==="min" && this.max < this.min) this.target = "max";
+      if (this.target === "max" && this.max < this.min) this.target = "min";
+      else if (this.target === "min" && this.max < this.min) this.target = "max";
 
-      if($event.target!==$event.currentTarget) {
-        console.dir($event.currentTarget)
+      if ($event.target !== $event.currentTarget) {
+        console.dir($event.currentTarget);
         let temp = $event.clientX - $event.currentTarget.offsetLeft;
         this[this.target] = this.getSize(temp);
-      }
-      else this[this.target] = $event.offsetX;
+      } else this[this.target] = $event.offsetX;
 
-      
       this.$refs[`${this.target}-bounder`].style.left = this.getSize(this[this.target]) - 9 + "px";
     },
 
     // input 변경 이벤트
     setMin($event, val) {
-      if($event) this.min = $event.target.value / this.unit;
+      if ($event) this.min = $event.target.value / this.unit;
       else this.min = val / this.unit;
-      if(this.min > this.max) {
+      if (this.min > this.max) {
         this.max = this.min;
         this.$refs["max-bounder"].style.left = this.getSize(this.max) - 9 + "px";
       }
       this.$refs["min-bounder"].style.left = this.getSize(this.min) - 9 + "px";
     },
     setMax($event, val) {
-      if($event) this.max = $event.target.value / this.unit;
+      if ($event) this.max = $event.target.value / this.unit;
       else this.max = val / this.unit;
-      if(this.max < this.min) {
+      if (this.max < this.min) {
         this.min = this.max;
         this.$refs["min-bounder"].style.left = this.getSize(this.min) - 9 + "px";
       }
@@ -107,18 +93,18 @@ export default {
 
     // 범위 체크 이벤트
     getSize(num) {
-      return num >= 0 ? num < 240 ? num : 240 : 0;
-    }
+      return num >= 0 ? (num < 240 ? num : 240) : 0;
+    },
   },
   computed: {
     getMin() {
-      return this.min*this.unit;
+      return this.min * this.unit;
     },
     getMax() {
-      return this.max*this.unit;
-    }
-  }
-}
+      return this.max * this.unit;
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -179,7 +165,8 @@ export default {
 .bounder:active .ball-shadow {
   animation: pointer 0.5s infinite alternate;
 }
-.bounder:hover, .bounder:active  {
+.bounder:hover,
+.bounder:active {
   transform: scale(110%);
   z-index: 1;
 }
@@ -205,9 +192,9 @@ export default {
   width: 0;
   height: 0;
   border-bottom: 5px solid transparent;
-  border-top: 5px  solid var(--navy);
+  border-top: 5px solid var(--navy);
   border-left: 5px solid transparent;
-  border-right: 5px  solid transparent;
+  border-right: 5px solid transparent;
 }
 .input-container input {
   width: 55px;

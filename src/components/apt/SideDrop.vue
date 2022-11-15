@@ -4,18 +4,17 @@
       <span>|||</span>
     </div>
     <div class="content" ref="side">
-      <ul v-if="regcode()">
-        <li v-for="(item, idx) of list" :key="`apt-item-${idx}`">{{ item }}</li>
-      </ul>
+      <apt-list />
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import http from "@/apis/http.js";
+import AptList from "@/components/apt/list/AptList.vue";
 
 export default {
+  components: { AptList },
   name: "SideDrop",
   data() {
     return {
@@ -47,12 +46,6 @@ export default {
     mouseMoveHandler($event) {
       this.x = window.innerWidth - $event.x - 15;
     },
-
-    /******** 지역코드에 따른 데이터 출력 함수 ********/
-    getList() {
-      console.log(this.regcode());
-      http.get(`apt/list?regcode=${this.regcode()}&amount=20`).then((res) => (this.list = res.data));
-    },
   },
   computed: {
     getRegcode() {
@@ -63,9 +56,6 @@ export default {
     // x값 변경에 따라 side 컴포넌트 너비 조정
     x() {
       this.$refs.side.style.width = `${this.x}px`;
-    },
-    getRegcode() {
-      this.getList();
     },
   },
 };
@@ -110,11 +100,12 @@ export default {
 }
 .content {
   width: 25vw;
-  margin-top: -1px;
+  height: 100%;
+  margin-top: -2px;
   background-color: var(--white);
   border: 1px solid var(--gray);
   box-shadow: -2px 0px 10px var(--shadow);
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
   transition: all 0.1s ease-out;
   overflow: hidden;
 }
