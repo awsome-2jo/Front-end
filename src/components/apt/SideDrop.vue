@@ -54,15 +54,19 @@ export default {
       http.get(`apt/list?regcode=${this.regcode()}&amount=20`).then((res) => (this.list = res.data));
     },
   },
+  computed: {
+    getRegcode() {
+      return this.regcode();
+    },
+  },
   watch: {
     // x값 변경에 따라 side 컴포넌트 너비 조정
     x() {
       this.$refs.side.style.width = `${this.x}px`;
     },
-  },
-  // 지역코드 변경 감지
-  updated() {
-    this.getList();
+    getRegcode() {
+      this.getList();
+    },
   },
 };
 </script>
