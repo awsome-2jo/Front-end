@@ -24,7 +24,6 @@ export default new Vuex.Store({
       state.sido = val;
     },
     SET_GUGUN(state, val) {
-      console.log("SET_GUGUN");
       if (!val) val = "시/군/구";
       state.gugun = val;
     },

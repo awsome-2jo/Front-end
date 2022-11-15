@@ -3,19 +3,29 @@
     <div class="handler drag-block" @mousedown="mouseDownHandler">
       <span>|||</span>
     </div>
-    <div class="content" ref="side">내용내용</div>
+    <div class="content" ref="side">
+      <ul v-if="regcode()">
+        <li v-for="(item, idx) of list" :key="`apt-item-${idx}`">{{ item }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+import http from "@/apis/http.js";
+
 export default {
   name: "SideDrop",
   data() {
     return {
       x: 0,
+      list: [],
+      ...mapState(["regcode"]),
     };
   },
   methods: {
+    /******* 핸들러 마우스 이벤트 *******/
     mouseDownHandler() {
       window.addEventListener("mousemove", this.mouseMoveHandler);
       window.addEventListener("mouseup", this.mouseUpHandler);
@@ -23,7 +33,7 @@ export default {
     mouseUpHandler() {
       window.removeEventListener("mousemove", this.mouseMoveHandler);
       window.removeEventListener("mouseup", this.mouseUpHandler);
-
+      // 현재 x값에 따라 지정된 4개의 위치로 x 값 설정
       if (this.x < window.innerWidth / 6) {
         this.x = 0;
       } else if (this.x < window.innerWidth / 3) {
@@ -37,11 +47,22 @@ export default {
     mouseMoveHandler($event) {
       this.x = window.innerWidth - $event.x - 15;
     },
+
+    /******** 지역코드에 따른 데이터 출력 함수 ********/
+    getList() {
+      console.log(this.regcode());
+      http.get(`apt/list?regcode=${this.regcode()}&amount=20`).then((res) => (this.list = res.data));
+    },
   },
   watch: {
+    // x값 변경에 따라 side 컴포넌트 너비 조정
     x() {
       this.$refs.side.style.width = `${this.x}px`;
     },
+  },
+  // 지역코드 변경 감지
+  updated() {
+    this.getList();
   },
 };
 </script>
