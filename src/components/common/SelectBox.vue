@@ -4,7 +4,7 @@
       {{ select }}
       <font-awesome-icon class="down-icon" icon="fa-solid fa-chevron-down" />
     </div>
-    <template v-if="open">
+    <template v-if="open && options.length">
       <ul class="scroll">
         <li
           v-for="(item, idx) of options"
@@ -13,7 +13,7 @@
           :class="{ selected: select === item }"
           @click="changeOption(item)"
         >
-          {{ item }}
+          {{ item.text }}
         </li>
       </ul>
     </template>
@@ -45,16 +45,22 @@ export default {
 </script>
 
 <style scoped>
+* {
+  font-size: 14px;
+}
 .select-container {
+  font-size: 14px;
   box-sizing: border-box;
   width: 150px;
   height: 40px;
+  max-height: 40px;
   border-radius: 20px;
   border: 2px solid var(--navy);
   background-color: var(--white);
   padding: 4px;
   position: relative;
   transition: all 0.1s linear;
+  overflow: hidden;
 }
 .select-container .down-icon {
   position: absolute;
@@ -67,13 +73,15 @@ export default {
   transform: rotate(180deg);
 }
 .select-container.open {
-  height: 200px;
-  overflow: hidden;
+  height: fit-content;
+  max-height: 200px;
 }
-.select-container.open .select {
+.select-container.open .select,
+.select:hover {
   background-color: var(--gray);
 }
 .select {
+  cursor: pointer;
   box-sizing: border-box;
   width: 100%;
   border-radius: 20px;
@@ -86,7 +94,8 @@ export default {
 .scroll {
   padding: 0;
   width: 100%;
-  height: 150px;
+  max-height: 150px;
+  height: fit-content;
   overflow-x: hidden;
   overflow-y: scroll;
   margin-top: 5px;
@@ -101,13 +110,12 @@ export default {
   width: 6px;
   background-color: var(--navy);
   border-radius: 3px;
-
 }
 .option {
+  cursor: pointer;
   box-sizing: border-box;
   width: 100%;
   color: var(--navy);
-  font-size: 16px;
   line-height: 28px;
   padding: 1px 10px;
   list-style: none;
