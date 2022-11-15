@@ -6,9 +6,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    sido: "광역시/도",
-    gugun: "시/군/구",
-    dong: "동/읍/면",
+    sido: "",
+    gugun: "",
+    dong: "",
     sidoList: [],
     gugunList: [],
     dongList: [],
@@ -20,15 +20,15 @@ export default new Vuex.Store({
       state.regcode = val;
     },
     SET_SIDO(state, val) {
-      if (!val) val = "광역시/도";
+      if (!val) val = "";
       state.sido = val;
     },
     SET_GUGUN(state, val) {
-      if (!val) val = "시/군/구";
+      if (!val) val = "";
       state.gugun = val;
     },
     SET_DONG(state, val) {
-      if (!val) val = "동/읍/면";
+      if (!val) val = "";
       state.dong = val;
     },
     SET_SIDO_LIST(state, arr) {

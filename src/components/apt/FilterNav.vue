@@ -2,9 +2,9 @@
   <nav>
     <div>
       <div class="select-component">
-        <select-box :select="sido()" :options="sidoList()" @on-change="setSido" />
-        <select-box :select="gugun()" :options="gugunList()" @on-change="setGugun" />
-        <select-box :select="dong()" :options="dongList()" @on-change="setDong" />
+        <select-box :select="sido()" :options="sidoList()" default="광역시/도" @on-change="setSido" />
+        <select-box :select="gugun()" :options="gugunList()" default="시/군/구" @on-change="setGugun" />
+        <select-box :select="dong()" :options="dongList()" default="동/읍/면" @on-change="setDong" />
       </div>
       <div class="search-component">
         <text-input />
@@ -24,14 +24,9 @@ export default {
   data() {
     return {
       ...mapState(["sido", "gugun", "dong", "sidoList", "gugunList", "dongList"]),
-      select: "default",
-      options: ["속성 1", "속성 2", "속성 3", "속성 4", "속성 5", "속성 6", "속성 7"],
     };
   },
   methods: {
-    setSelect(select) {
-      this.select = select;
-    },
     ...mapActions(["setSido", "setGugun", "setDong"]),
   },
 };

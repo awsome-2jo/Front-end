@@ -1,7 +1,7 @@
 <template>
   <div class="select-container drag-block" :class="{ open: open }" @click="toggleOpen">
     <div class="select">
-      {{ select }}
+      {{ getSelect }}
       <font-awesome-icon class="down-icon" icon="fa-solid fa-chevron-down" />
     </div>
     <template v-if="open && options.length">
@@ -26,6 +26,10 @@ export default {
   props: {
     select: String,
     options: Array,
+    default: {
+      type: String,
+      default: "선택해주세요",
+    },
   },
   data() {
     return {
@@ -39,6 +43,12 @@ export default {
     },
     changeOption(option) {
       this.$emit("on-change", option);
+    },
+  },
+
+  computed: {
+    getSelect() {
+      return this.select ? this.select : this.default;
     },
   },
 };
