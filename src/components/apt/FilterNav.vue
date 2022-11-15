@@ -1,19 +1,26 @@
 <template>
   <nav>
     <div>
-      <select-box :select="sido()" :options="sidoList()" @on-change="setSido" />
-      <select-box :select="gugun()" :options="gugunList()" @on-change="setGugun" />
-      <select-box :select="dong()" :options="dongList()" @on-change="setDong" />
+      <div class="select-component">
+        <select-box :select="sido()" :options="sidoList()" @on-change="setSido" />
+        <select-box :select="gugun()" :options="gugunList()" @on-change="setGugun" />
+        <select-box :select="dong()" :options="dongList()" @on-change="setDong" />
+      </div>
+      <div class="search-component">
+        <text-input />
+      </div>
     </div>
   </nav>
 </template>
 
 <script>
 import SelectBox from "@/components/common/SelectBox";
+import TextInput from "../common/TextInput.vue";
 import { mapState, mapActions } from "vuex";
+
 export default {
   name: "FilterNav",
-  components: { SelectBox },
+  components: { SelectBox, TextInput },
   data() {
     return {
       ...mapState(["sido", "gugun", "dong", "sidoList", "gugunList", "dongList"]),
@@ -44,10 +51,15 @@ nav {
 }
 nav > div {
   margin: auto;
-  width: 1080px;
+  width: 100%;
+  max-width: 1080px;
+  display: flex;
+  justify-content: space-between;
+}
+.select-component {
   display: flex;
 }
-nav > div > * {
+.select-component > * {
   margin-left: 10px;
 }
 </style>
