@@ -35,7 +35,7 @@ export default {
       }
     },
     mouseMoveHandler($event) {
-      this.x = window.innerWidth - $event.x - 30;
+      this.x = window.innerWidth - $event.x - 15;
     },
   },
   watch: {
@@ -63,7 +63,7 @@ export default {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   background-color: var(--navy);
-  box-shadow: -4px 4px 5px var(--darkgray);
+  box-shadow: -2px 0px 10px var(--shadow);
 }
 .handler {
   height: 100px;
@@ -88,7 +88,7 @@ export default {
   margin-top: -1px;
   background-color: var(--white);
   border: 1px solid var(--gray);
-  box-shadow: -4px 4px 5px var(--darkgray);
+  box-shadow: -2px 0px 10px var(--shadow);
   box-sizing: border-box;
   transition: all 0.1s ease-out;
   overflow: hidden;
