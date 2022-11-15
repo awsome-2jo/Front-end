@@ -26,6 +26,7 @@ export default {
   --yellow: #ffc01e;
   --gray: #f4f4f8;
   --darkgray: #d6d6d6;
+  --shadow: rgba(0, 0, 0, 0.2);
 }
 
 /* 네이버 나눔스퀘어 글꼴 */
