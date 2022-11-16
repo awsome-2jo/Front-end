@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" @click="close">
     <form class="login-form">
       <h2>HOME:IN</h2>
       <checkbox-button class="test" :value="remember" text="아이디 저장" position="left" @event="setRemember" />
@@ -29,7 +29,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["login"]),
+    ...mapActions(["login", "setLoginModal"]),
     setRemember() {
       this.remember = !this.remember;
     },
@@ -42,6 +42,10 @@ export default {
     onLogin() {
       this.login({ id: this.id, pass: this.pass });
     },
+    close($event) {
+      if($event.currentTarget===$event.target) this.setLoginModal();
+      else $event.stopPropagation();
+    }
   },
 };
 </script>

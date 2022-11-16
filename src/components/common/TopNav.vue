@@ -14,7 +14,9 @@
       </div>
 
       <div v-if="userInfo()" class="nav-user member">
-        {{ userInfo() }}님
+        <span class="user-name"><b>{{ userInfo().name }}</b>님</span>
+        <font-awesome-icon icon="fa-regular fa-user" class="profile" />
+        
         <round-button text="로그아웃" @event="logout"></round-button>
       </div>
       <div v-else class="nav-user non-member">
@@ -67,7 +69,7 @@ header {
   height: 100%;
   text-align: center;
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
   align-items: center;
 }
 .nav-logo a {
@@ -78,7 +80,9 @@ header {
   text-decoration: none;
   line-height: 50px;
 }
-
+.nav-container {
+  margin-left: 80px;
+}
 .nav-container a {
   color: var(--black);
   margin: auto 10px;
@@ -110,9 +114,25 @@ header {
   border-radius: 5px;
 } */
 .nav-user {
-  justify-items: flex-end;
+  flex: auto;
+  display: flex;
+  justify-content: right;
+  align-items: center;
 }
 .nav-user.non-member > * {
   margin-left: 10px;
+}
+.profile {
+  background-color: var(--gray);
+  padding:8px;
+  font-size: 13px;
+  color: var(--darkgray);
+  border-radius: 50%;
+  /* margin-right: 5px; */
+  margin-right: 20px;
+}
+.user-name {
+  margin-right: 5px;
+  font-size: 12px;
 }
 </style>
