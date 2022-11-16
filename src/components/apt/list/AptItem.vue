@@ -1,11 +1,11 @@
 <template>
   <div class="container">
     <div class="img-container">
-      <img :src="require(`@/assets/imgs/apt-${(+data.no)%6+1}.jpg`)">
+      <img :src="require(`@/assets/imgs/apt-${(+data.no % 6) + 1}.jpg`)" />
     </div>
     <div class="info-container">
-      <span class="dong">{{data.dong}}</span>
-      <h4 class="name">{{data.apartmentName}}</h4>
+      <span class="dong">{{ data.dong }}</span>
+      <h4 class="name">{{ data.apartmentName }}</h4>
 
       <div class="tag-container">
         <div class="tag edu">학원가 👩🏻‍🏫</div>
@@ -20,12 +20,14 @@
 
       <p class="range">
         <font-awesome-icon icon="fa-solid fa-sack-dollar" class="icon" />
-        {{data.minDealAmount}}만원 ~ {{data.maxDealAmount}}만원
+
+        <span v-if="data.minDealAmount === data.maxDealAmount">{{ getDealString(data.minDealAmount) }}</span>
+        <span v-else> {{ getDealString(data.minDealAmount) }} ~ {{ getDealString(data.maxDealAmount) }} </span>
       </p>
       <p class="range">
         <font-awesome-icon icon="fa-solid fa-maximize" class="icon" />
-        <!-- <font-awesome-icon icon="fa-solid fa-house-chimney-window" /> -->
-        {{data.minArea}}m² ~ {{data.maxArea}}m²
+        <span v-if="data.minArea === data.maxArea">{{ data.minArea }}m²</span>
+        <span v-else>{{ data.minArea }}m² ~ {{ data.maxArea }}m²</span>
       </p>
     </div>
   </div>
@@ -37,19 +39,37 @@ export default {
   props: {
     data: Object,
   },
-  created() {
-    console.log(this.data);
-  }
+  methods: {
+    getDealString(deal) {
+      let urk = Math.round(deal / 10000);
+      let marn = deal % 10000;
+      let arr = [];
+      if (urk) arr.push(`${urk}억`);
+      if (marn) arr.push(`${marn}만`);
+      return `${arr.join(" ")}원`;
+    },
+  },
 };
 </script>
 
 <style scoped>
 .container {
+  cursor: pointer;
   width: 100%;
-  padding: 10px 0;
+  margin: 20px 0;
   background-color: var(--white);
-  border-bottom: 1px solid var(--gray);
+  /* border-bottom: 1px solid var(--gray); */
   display: flex;
+  position: relative;
+}
+.container:hover::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--shadow);
+  opacity: 0.2;
+  border-radius: 8px;
 }
 .info-container {
   flex-grow: 1;
@@ -71,23 +91,6 @@ export default {
   align-items: center;
   margin: 3px;
 }
-.tag-container {
-  display: flex;
-  flex-wrap: wrap;
-  padding-bottom: 5px;
-  margin-bottom: 5px;
-  border-bottom: 1px solid var(--gray);
-}
-.tag {
-  padding: 4px 10px;
-  margin: 0 4px 4px 0;
-  border-radius: 12px;
-  background-color: var(--gray);
-  color: var(--navy);
-  font-size: 11px;
-  font-weight: 900;
-  width: fit-content;
-}
 .range > .icon {
   background-color: var(--white);
   padding: 5px;
@@ -97,20 +100,45 @@ export default {
   border-radius: 50%;
   color: var(--navy);
 }
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid var(--gray);
+}
+.tag {
+  height: 16px;
+  padding: 4px 10px;
+  margin: 0 4px 4px 0;
+  border-radius: 12px;
+  background-color: var(--gray);
+  color: var(--navy);
+  font-size: 11px;
+  font-weight: 900;
+  width: fit-content;
+}
+
 .img-container {
   max-width: 140px;
   width: 100%;
-  height: 140px;
   overflow: hidden;
   position: relative;
   border-radius: 10px;
   margin-right: 15px;
 }
-.img-container > * {
+.container:hover .img-container {
+  opacity: 0.8;
+}
+.container:hover .img-container > img {
+  transform: scale(102%) translate(-50%, -50%);
+}
+.img-container > img {
   height: 100%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  transition: all 0.25s linear;
 }
 </style>

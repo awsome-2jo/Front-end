@@ -13,23 +13,42 @@
         <router-link to="/user">마이페이지</router-link>
       </div>
 
-      <div class="nav-user non-member">
+      <div v-if="userInfo()" class="nav-user member">
+        {{ userInfo() }}님
+        <round-button text="로그아웃" @event="logout"></round-button>
+      </div>
+      <div v-else class="nav-user non-member">
         <round-button text="회원가입" type="line" @event="move"></round-button>
-        <round-button text="로그인" @event="move"></round-button>
+        <round-button text="로그인" @event="setLoginModal(true)"></round-button>
       </div>
     </nav>
+
+    <login-modal v-if="loginModal()" />
   </header>
 </template>
 
 <script>
 import RoundButton from "@/components/common/RoundButton";
+import LoginModal from "@/components/user/LoginModal";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "TopNav",
-  components: { RoundButton },
+  data() {
+    return {
+      ...mapState(["loginModal", "userInfo"]),
+    };
+  },
+  components: { RoundButton, LoginModal },
   methods: {
+    ...mapActions(["setLoginModal", "logout"]),
     move() {
       console.log("move");
+    },
+  },
+  computed: {
+    getUserInfo() {
+      return this.userInfo();
     },
   },
 };

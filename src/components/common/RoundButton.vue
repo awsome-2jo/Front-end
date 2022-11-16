@@ -40,7 +40,8 @@ button.line {
   color: var(--navy);
   border: 1px solid var(--navy);
 }
-button:hover, button:active {
+button:hover,
+button:active {
   transform: scale(105%);
 }
 </style>

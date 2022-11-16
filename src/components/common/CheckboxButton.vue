@@ -1,10 +1,11 @@
 <template>
   <div class="checkbox-container drag-block" @click="toggle">
+    <label v-if="position === `left`">{{ text }}</label>
     <div class="checkbox" :class="{ on: value, off: !value }">
       <div></div>
     </div>
     <input type="checkbox" />
-    <label>{{ text }}</label>
+    <label v-if="position === `right`">{{ text }}</label>
   </div>
 </template>
 
@@ -16,6 +17,10 @@ export default {
     text: {
       type: String,
       default: "",
+    },
+    position: {
+      type: String,
+      default: "right",
     },
   },
   methods: {
@@ -44,7 +49,6 @@ input {
   justify-content: center;
   align-items: center;
   transition: all 0.05s linear;
-  margin-right: 5px;
 }
 .checkbox div {
   width: 11px;
@@ -58,8 +62,11 @@ input {
 }
 .checkbox.on div {
   transform: scale(100%);
-  }
+}
 .checkbox.off div {
   transform: scale(0%);
+}
+label {
+  margin: 0 5px;
 }
 </style>

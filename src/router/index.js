@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import HomeView from "../views/HomeView";
 import AptView from "../views/AptView";
+import NoticeView from "../views/NoticeView";
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,28 @@ const routes = [
     path: "/apt",
     name: "aptMap",
     component: AptView,
+  },
+  {
+    path: "/notice",
+    name: "noticeView",
+    component: NoticeView,
+    children: [
+      {
+        path: "/",
+        name: "noticeList",
+        component: () => import("@/components/notice/NoticeList"),
+      },
+      {
+        path: "list",
+        name: "noticeList",
+        component: () => import("@/components/notice/NoticeList"),
+      },
+      {
+        path: "detail/:no",
+        name: "noticeDetail",
+        component: () => import("@/components/notice/NoticeDetail"),
+      },
+    ]
   },
 
   {

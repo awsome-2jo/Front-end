@@ -1,6 +1,8 @@
 <template>
   <div class="text-input-compont">
-    <font-awesome-icon icon="fa-solid fa-magnifying-glass" class="awsome-icon" />
+    <font-awesome-icon v-if="icon === `search`" icon="fa-solid fa-magnifying-glass" class="awsome-icon" />
+    <font-awesome-icon v-else-if="icon === `user`" icon="fa-solid fa-user" class="awsome-icon" />
+    <font-awesome-icon v-else-if="icon === `password`" icon="fa-solid fa-key" class="awsome-icon" />
     <input :type="type" :value="value" @input="onChange" :placeholder="placeholder" />
   </div>
 </template>
@@ -17,6 +19,10 @@ export default {
     placeholder: {
       type: String,
       default: "입력해주세요",
+    },
+    icon: {
+      type: String,
+      default: "",
     },
   },
   methods: {

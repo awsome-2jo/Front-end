@@ -6,9 +6,7 @@
         <select-box :select="gugun()" :options="gugunList()" default="시/군/구" @on-change="setGugun" />
         <select-box :select="dong()" :options="dongList()" default="동/읍/면" @on-change="setDong" />
       </div>
-      <div class="search-component">
-        <text-input />
-      </div>
+      <div class="search-component"><text-input icon="search" /></div>
     </div>
   </nav>
 </template>
