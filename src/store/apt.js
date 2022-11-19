@@ -1,8 +1,8 @@
-import http from "@/apis/http";
-import Vue from 'vue'
-import Vuex from 'vuex'
+import http from "@/api/http.js";
+import Vue from "vue";
+import Vuex from "vuex";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -44,7 +44,7 @@ export default new Vuex.Store({
     SET_DONG_LIST(state, arr) {
       if (!arr) arr = [];
       state.dongList = arr;
-    }
+    },
   },
   actions: {
     /************* 지역 변경 메서드 **************/
@@ -71,27 +71,29 @@ export default new Vuex.Store({
       context.commit("SET_DONG", data?.text);
     },
 
-
     /************** 지역 목록 메서드 **************/
     // 광역시/도 목록 메서드
     setSidoList(context) {
-      http.get(`apt/sido`)
-        .then(res => context.dispatch("setOptList", res.data))
-        .then(data => context.commit("SET_SIDO_LIST", data));
+      http
+        .get(`apt/sido`)
+        .then((res) => context.dispatch("setOptList", res.data))
+        .then((data) => context.commit("SET_SIDO_LIST", data));
     },
 
     // 시/구/군 목록 메서드
     setGugunList(context, val) {
-      http.get(`apt/gugun?code=${val}`)
-        .then(res => context.dispatch("setOptList", res.data))
-        .then(data => context.commit("SET_GUGUN_LIST", data));
+      http
+        .get(`apt/gugun?code=${val}`)
+        .then((res) => context.dispatch("setOptList", res.data))
+        .then((data) => context.commit("SET_GUGUN_LIST", data));
     },
 
     // 동/읍/면 목록 메서드
     setDongList(context, val) {
-      http.get(`apt/dong?code=${val}`)
-        .then(res => context.dispatch("setOptList", res.data))
-        .then(data => context.commit("SET_DONG_LIST", data));
+      http
+        .get(`apt/dong?code=${val}`)
+        .then((res) => context.dispatch("setOptList", res.data))
+        .then((data) => context.commit("SET_DONG_LIST", data));
     },
 
     /************** ETC **************/
@@ -102,8 +104,7 @@ export default new Vuex.Store({
         delete item.name;
       }
       return data;
-    }
+    },
   },
-  modules: {
-  }
-})
+  modules: {},
+});

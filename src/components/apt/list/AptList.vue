@@ -18,7 +18,7 @@
 
 <script>
 import { mapState } from "vuex";
-import http from "@/apis/http.js";
+import http from "@/api/http.js";
 import AptItem from "./AptItem.vue";
 
 export default {

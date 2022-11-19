@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import http from "@/apis/http.js";
+import http from "@/api/http.js";
 import { mapState } from "vuex";
 import TextInput from "../common/TextInput.vue";
 

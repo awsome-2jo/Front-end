@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import http from "@/apis/http.js";
+import http from "@/api/http.js";
 
 export default {
   name: "noticeModify",
