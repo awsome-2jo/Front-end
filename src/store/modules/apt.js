@@ -1,10 +1,7 @@
-import http from "@/api/http.js";
-import Vue from "vue";
-import Vuex from "vuex";
+import { getSido, getGugun, getDong } from "@/api/apt";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+const AptStore = {
+  namespaced: true,
   state: {
     sido: "",
     gugun: "",
@@ -74,26 +71,44 @@ export default new Vuex.Store({
     /************** 지역 목록 메서드 **************/
     // 광역시/도 목록 메서드
     setSidoList(context) {
-      http
-        .get(`apt/sido`)
-        .then((res) => context.dispatch("setOptList", res.data))
-        .then((data) => context.commit("SET_SIDO_LIST", data));
+      const success = (res) => {
+        context
+          .dispatch("setOptList", res.data)
+          .then((data) => context.commit("SET_SIDO_LIST", data));
+      };
+      const fail = (error) => {
+        console.log(error);
+      };
+
+      getSido(success, fail);
     },
 
     // 시/구/군 목록 메서드
     setGugunList(context, val) {
-      http
-        .get(`apt/gugun?code=${val}`)
-        .then((res) => context.dispatch("setOptList", res.data))
-        .then((data) => context.commit("SET_GUGUN_LIST", data));
+      const success = (res) => {
+        context
+          .dispatch("setOptList", res.data)
+          .then((data) => context.commit("SET_GUGUN_LIST", data));
+      };
+      const fail = (error) => {
+        console.log(error);
+      };
+
+      getGugun(val, success, fail);
     },
 
     // 동/읍/면 목록 메서드
     setDongList(context, val) {
-      http
-        .get(`apt/dong?code=${val}`)
-        .then((res) => context.dispatch("setOptList", res.data))
-        .then((data) => context.commit("SET_DONG_LIST", data));
+      const success = (res) => {
+        context
+          .dispatch("setOptList", res.data)
+          .then((data) => context.commit("SET_DONG_LIST", data));
+      };
+      const fail = (error) => {
+        console.log(error);
+      };
+
+      getDong(val, success, fail);
     },
 
     /************** ETC **************/
@@ -107,4 +122,6 @@ export default new Vuex.Store({
     },
   },
   modules: {},
-});
+};
+
+export default AptStore;
