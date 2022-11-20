@@ -1,33 +1,42 @@
 <template>
-  <main>
-    <div>
-      제목
+  <div>
+    <div class="title-container">
+      <span>제목</span>
+      <input v-model="title">
     </div>
     <tip-tap :value="content" @input="setContent" />
-    <button @click="submitNotice">보내기</button>
-  </main>
+    <div class="btn-container">
+      <round-button type="line" text="작성취소" @event="backToNoticeList" />
+      <round-button text="글 개시" @event="submitNotice" />
+    </div>
+  </div>
 </template>
 
 <script>
 import TipTap from "@/components/common/tiptap/TipTap.vue";
 import { addNotice, getNoticeDetail, modifyNotice } from "@/api/notice";
+import RoundButton from "../common/RoundButton.vue";
 
 export default {
   name: "noticeModify",
   components: {
-    TipTap
+    TipTap,
+    RoundButton
   },
   data() {
     return {
       editor: null,
       no: null,
-      title: "tiptap 라이브러리를 이용한 공지사항",
+      title: "",
       content: "",
     }
   },
   methods: {
     setContent(value) {
       this.content = value;
+    },
+    backToNoticeList() {
+      this.$router.push(`/notice/list`);
     },
     async submitNotice() {
       let body = {no: this.no, title: this.title, content: this.content};
@@ -55,5 +64,43 @@ export default {
 </script>
 
 <style scoped>
-
+.title-container {
+  box-sizing: border-box;
+  margin: auto;
+  margin-top: 30px;
+  height: 50px;
+  width: 100%;
+  max-width: 1020px;
+  border-top: 3px solid var(--navy);
+  color: var(--navy);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+.title-container > input {
+  width: 80%;
+  height: 30px;
+  border: 1px solid var(--gray);
+  border-radius: 3px;
+  background-color: var(--gray);
+  font-size: 16px;
+}
+.title-container > input:focus {
+  outline: none;
+}
+.title-container > span {
+  padding: 20px 30px;
+}
+.btn-container {
+  margin: auto;
+  width: 100%;
+  max-width: 1000px;
+  height: 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.btn-container > * {
+  margin-left: 10px;
+}
 </style>

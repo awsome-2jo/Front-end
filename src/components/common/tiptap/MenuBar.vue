@@ -151,11 +151,10 @@ export default {
 </script>
 
 <style scoped>
-
 .menu-bar {
   width: 100%;
   max-width: 1000px;
-  margin: 20px auto 0;
+  margin: 0 auto;
   display: flex;
   padding: 10px;
   border-top: 3px solid var(--navy);
