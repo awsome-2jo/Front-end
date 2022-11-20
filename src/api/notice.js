@@ -29,7 +29,7 @@ async function getNoticeListCount(params, success, fail) {
  * @param {Function} fail 실패시 실행할 함수
  */
 async function addNotice(body, success, fail) {
-  await api.post(`/notice/list/count`, body).then(success).catch(fail);
+  await api.post(`/notice/add`, body).then(success).catch(fail);
 }
 
 /**
@@ -61,7 +61,7 @@ async function modifyNotice(body, success, fail) {
  * @param {Function} fail 실패시 실행할 함수
  */
 async function getNoticeDetail(no, success, fail) {
-  await api.put(`/notice/detail/${no}`).then(success).catch(fail);
+  await api.get(`/notice/detail/${no}`).then(success).catch(fail);
 }
 
 export {

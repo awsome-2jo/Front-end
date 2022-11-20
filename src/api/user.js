@@ -53,14 +53,13 @@ async function findPass(body, success, fail) {
 }
 
 /**
- * POST: 회원정보
- * @param {Object} body 유저정보
+ * GET: 회원정보
  * @param {Function} success 성공시 실행할 함수
  * @param {Function} fail 실패시 실행할 함수
  */
-async function getUserInfo(body, success, fail) {
+async function getUserInfo(success, fail) {
   api.defaults.headers["access-token"] = sessionStorage.getItem("access-token");
-  await api.post(`/user/info`, body).then(success).catch(fail);
+  await api.get(`/user/info`).then(success).catch(fail);
 }
 
 /**

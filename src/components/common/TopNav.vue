@@ -6,11 +6,10 @@
       </div>
 
       <div class="nav-container">
-        <router-link to="/about">서비스소개</router-link>
         <router-link to="/apt">실거래가</router-link>
         <router-link to="/news">부동산뉴스</router-link>
         <router-link to="/notice">공지사항</router-link>
-        <router-link to="/user">마이페이지</router-link>
+        <router-link v-if="userInfo" to="/user">마이페이지</router-link>
       </div>
 
       <div v-if="userInfo" class="nav-user member">
