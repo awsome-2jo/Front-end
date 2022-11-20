@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import http from "@/api/http.js";
+import { getNoticeList } from "@/api/notice";
 import { mapState } from "vuex";
 import TextInput from "../common/TextInput.vue";
 
@@ -67,7 +67,9 @@ export default {
       // heads: ["번호", "제목", "작성일자", "조회수"],
       // ratio: [`15%`, `50%`, `25%`, `10%`],
       data: [],
-      ...mapState(["userInfo"]),
+      keyword: "",
+      key: "title",
+      ...mapState("UserStore", ["userInfo"]),
     };
   },
   methods: {
@@ -76,15 +78,10 @@ export default {
     },
     getList(page, amount) {
       console.log(page, amount);
-      http
-        .get(`/notice/list`)
-        .then((res) => res.data)
-        .then((data) => {
-          for (let item of data) {
-            delete item.content;
-          }
-          this.data = data;
-        });
+      const params = {keyword: this.keyword, key: this.key, type:0, amount: 20};
+      const callback = (res) => {this.data = res.data};
+      const fail = (error) => console.log(error);
+      getNoticeList(params, callback, fail);
     },
     addNotice() {
       this.$router.push(`/notice/add`);

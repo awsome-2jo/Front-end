@@ -10,12 +10,10 @@
 import FilterNav from "@/components/apt/FilterNav.vue";
 import SideDrop from "@/components/apt/SideDrop.vue";
 import KakaoMap from "@/components/apt/KakaoMap.vue";
-import store from "@/store/apt.js";
 
 export default {
   components: { SideDrop, FilterNav, KakaoMap },
   name: "AptMap",
-  store,
   created() {
     this.$store.dispatch("setSidoList");
   },

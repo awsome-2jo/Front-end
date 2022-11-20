@@ -73,6 +73,34 @@ export default {
   font-weight: lighter;
 }
 
+/* Keyframes */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes toast-up {
+  from {
+    opacity: 0;
+    margin-top: 100%;
+  }
+  to {
+    opacity: 1;
+    margin-top: 0;
+  }
+}
+
 /* 드래그 방지 속성 */
 .drag-block {
   -webkit-user-select: none;

@@ -16,7 +16,7 @@ export default {
       geocoder: null,
       imageSize: null,
       markerImage: null,
-      ...mapState(["sido", "gugun", "dong", "regcode"]),
+      ...mapState("AptStore", ["sido", "gugun", "dong", "regcode"]),
     };
   },
   methods: {

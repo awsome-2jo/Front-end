@@ -20,7 +20,7 @@ export default {
     return {
       x: 0,
       list: [],
-      ...mapState(["regcode"]),
+      ...mapState("AptStore", ["regcode"]),
     };
   },
   methods: {

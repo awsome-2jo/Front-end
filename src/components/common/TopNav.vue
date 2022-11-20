@@ -13,8 +13,8 @@
         <router-link to="/user">마이페이지</router-link>
       </div>
 
-      <div v-if="userInfo()" class="nav-user member">
-        <span class="user-name"><b>{{ userInfo().name }}</b>님</span>
+      <div v-if="userInfo" class="nav-user member">
+        <span class="user-name"><b>{{ userInfo.name }}</b>님</span>
         <font-awesome-icon icon="fa-regular fa-user" class="profile" />
         
         <round-button text="로그아웃" @event="logout"></round-button>
@@ -25,7 +25,7 @@
       </div>
     </nav>
 
-    <login-modal v-if="loginModal()" />
+    <login-modal />
   </header>
 </template>
 
@@ -36,21 +36,17 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   name: "TopNav",
-  data() {
-    return {
-      ...mapState(["loginModal", "userInfo"]),
-    };
-  },
   components: { RoundButton, LoginModal },
   methods: {
-    ...mapActions(["setLoginModal", "logout"]),
+    ...mapActions("UserStore", ["setLoginModal", "logout"]),
     move() {
       console.log("move");
     },
   },
   computed: {
+    ...mapState("UserStore", ["userInfo"]),
     getUserInfo() {
-      return this.userInfo();
+      return this.userInfo;
     },
   },
 };

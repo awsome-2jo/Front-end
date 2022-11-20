@@ -79,15 +79,15 @@
 </template>
 
 <script>
-import http from "@/api/http.js";
 import { mapState } from "vuex";
+import { getNoticeDetail, deleteNotice } from "@/api/notice";
 
 export default {
   name: "noticeDetail",
   data() {
     return {
       notice: null,
-      ...mapState(["userInfo"]),
+      ...mapState("UserStore", ["userInfo"]),
     };
   },
   methods: {
@@ -96,8 +96,7 @@ export default {
     },
     deleteNotice() {
       if(confirm("정말로 삭제하시겠습니까?")) {
-        http.delete(`notice/delete?no=${this.notice.no}`, {data:this.userInfo()})
-        .then(this.moveNoticeList);
+        deleteNotice(this.notice.no, this.moveNoticeList);
       }
     },
     moveNoticeList() {
@@ -105,10 +104,16 @@ export default {
     }
   },
   created() {
-    http
-      .get(`notice/detail?no=${this.$route.params.no}`)
-      .then((res) => res.data)
-      .then((data) => (this.notice = data));
+    const callback = (res) => {
+      this.notice = res.data;
+    }
+    const fail = (error) => {
+      console.log(error);
+      alert("공지사항을 불러올 수 없습니다!");
+      this.moveNoticeList();
+    }
+
+    getNoticeDetail(this.$route.params.no, callback, fail);
   },
 };
 </script>

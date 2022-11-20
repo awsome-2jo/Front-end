@@ -21,11 +21,11 @@ export default {
   components: { SelectBox, TextInput },
   data() {
     return {
-      ...mapState(["sido", "gugun", "dong", "sidoList", "gugunList", "dongList"]),
+      ...mapState("AptStore", ["sido", "gugun", "dong", "sidoList", "gugunList", "dongList"]),
     };
   },
   methods: {
-    ...mapActions(["setSido", "setGugun", "setDong"]),
+    ...mapActions("AptStore", ["setSido", "setGugun", "setDong"]),
   },
 };
 </script>

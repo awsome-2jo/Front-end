@@ -11,11 +11,17 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+    meta: {
+      title: "HOME:IN - 아파트 실거래가 정보 사이트",
+    },
   },
   {
     path: "/apt",
     name: "aptMap",
     component: AptView,
+    meta: {
+      title: "HOME:IN - 실거래 정보",
+    },
   },
   {
     path: "/notice",
@@ -64,6 +70,13 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+router.afterEach((to) => {
+  const title = to.meta.title === undefined ? "HOME:IN" : to.meta.title;
+  Vue.nextTick(() => {
+    document.title = title;
+  });
 });
 
 export default router;

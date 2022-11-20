@@ -1,5 +1,5 @@
 <template>
-  <div class="container" @click="close">
+  <div class="container" @click="close" v-show="loginModal">
     <form class="login-form">
       <h2>HOME:IN</h2>
       <checkbox-button class="test" :value="remember" text="아이디 저장" position="left" @event="setRemember" />
@@ -16,7 +16,7 @@
 <script>
 import CheckboxButton from "../common/CheckboxButton.vue";
 import TextInput from "../common/TextInput.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   components: { TextInput, CheckboxButton },
@@ -29,7 +29,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["login", "setLoginModal"]),
+    ...mapActions("UserStore", ["login", "setLoginModal"]),
     setRemember() {
       this.remember = !this.remember;
     },
@@ -39,14 +39,18 @@ export default {
     setPass(pass) {
       this.pass = pass;
     },
-    onLogin() {
-      this.login({ id: this.id, pass: this.pass });
+    async onLogin() {
+      await this.login({ id: this.id, pass: this.pass });
+      if(this.userInfo) this.setLoginModal();
     },
     close($event) {
       if($event.currentTarget===$event.target) this.setLoginModal();
       else $event.stopPropagation();
     }
   },
+  computed: {
+    ...mapState("UserStore", ["loginModal", "userInfo"]),
+  }
 };
 </script>
 
@@ -64,6 +68,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: var(--shadow);
+  animation: fade-in 0.5s linear;
 }
 .login-form {
   width: 400px;
@@ -75,6 +80,7 @@ export default {
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  animation: toast-up 0.5s ease-out;
 }
 .input-container {
   height: 100px;

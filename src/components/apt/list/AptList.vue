@@ -18,7 +18,7 @@
 
 <script>
 import { mapState } from "vuex";
-import http from "@/api/http.js";
+import { getAptList } from "@/api/apt";
 import AptItem from "./AptItem.vue";
 
 export default {
@@ -28,15 +28,19 @@ export default {
     return {
       list: [],
       loading: false,
-      ...mapState(["regcode"]),
+      ...mapState("AptStore", ["regcode"]),
     };
   },
   methods: {
     /******** 지역코드에 따른 데이터 출력 함수 ********/
     async getList() {
       this.loading = true;
-      if (!this.regcode) await http.get(`apt/list?regcode=11&amount=20`).then((res) => (this.list = res.data));
-      else await http.get(`apt/list?regcode=${this.regcode()}&amount=20`).then((res) => (this.list = res.data));
+      let params = {regcode: this.regcode(), amount: 20};
+      
+      const callback = (res) => {this.list = res.data};
+      const error = (error) => {console.log(error)};
+
+      getAptList(params, callback, error);
       this.loading = false;
     },
   },

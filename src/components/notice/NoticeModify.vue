@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import http from "@/api/http.js";
+import { addNotice, getNoticeDetail, modifyNotice } from "@/api/notice";
 
 export default {
   name: "noticeModify",
@@ -32,25 +32,25 @@ export default {
   methods: {
     async submitNotice() {
       let body = {no: this.no, title: this.title, content: this.content};
-      if(!this.$route.params.no) {
-        let {status, data} = await http.post(`notice/add`, body);
-        if(status===200) this.$router.push(`/notice/detail/${data}`)
-      }else {
-        let {status, data} = await http.put(`notice/modify`, body);
-        if(status===200) this.$router.push(`/notice/detail/${data}`)
-      }
+      const resolve = (res) => {
+        if (res.status===200) this.$router.push(`/notice/detail/${res.data}`)
+      };
+      const reject = (error) => console.log(error);
+
+      if(!this.$route.params.no) addNotice(body, resolve, reject);
+      else modifyNotice(body, resolve, reject);
     }
   },
   created() {
     if(!this.$route.params.no) return;
-    http
-      .get(`notice/detail?no=${this.$route.params.no}`)
-      .then(res => res.data)
-      .then(data => {
-        this.no = this.$route.params.no;
-        this.title = data.title;
-        this.content = data.content;
-      });
+    const resolve = (res) => {
+      this.no = res.data.no;
+      this.title = res.data.title;
+      this.content = res.data.content;
+    };
+    const reject = (error) => console.log(error);
+
+    getNoticeDetail(this.$route.params.no, resolve, reject);
   }
 }
 </script>
