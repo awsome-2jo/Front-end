@@ -1,328 +1,282 @@
 <template>
   <main>
-    <!-- <h1>공지사항</h1>
-    <table>
-      <thead>
-        <tr>
-          <th v-for="(head, i) of heads" :width="ratio[i]" :key="`th-${head}`">{{ head }}</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-if="!data.length" class="empty">
-          공지사항이 없습니다.
-        </tr>
-        <tr v-else v-for="(item, i) of data" :key="`tbody-tr-${i}`" @click="moveDetail(item.no)">
-          <td v-for="val of item" :key="`tbody-tr-${i}th-${val}`">{{ val }}</td>
-        </tr>
-      </tbody>
-    </table> -->
-    <div>
-        <div class="notice-title">
-          <strong>공지사항</strong>
-            <a v-if="userInfo()?.id===`admin`" class="btn-add" @click="addNotice">추가</a>
-        </div>
-        <div class="notice-list" style="margin-top: 10px">
-          <table class="notice-post">
-            <thead>
-              <tr>
-                <th style="width: 10%">번호</th>
-                <th style="width: 60%">제목</th>
-                <th style="width: 20%">작성일</th>
-                <th style="width: 10%">조회수</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="!data.length">
-                <td colspan="4">
-                  올라온 게시물이 없습니다.
-                </td>
-              </tr>
-              <tr v-else v-for="notice of data" :key="`tbody-tr-${notice.no}`" @click="moveDetail(notice.no)">
-                <td>{{notice.no}}</td>
-                <td>{{notice.title }}</td>
-                <td>{{notice.regDate}}</td>
-                <td>{{ notice.hit }}</td>
-              </tr>            	
-            </tbody>
-          </table>
-        </div>
-        <div class="search">
-          <text-input icon="search" />
-        </div>
+    <div class="main-header drag-block">
+      <div>
+        <h1>공지사항</h1>
+        <span>업데이트 소식 및 이벤트를 확인해보세요</span>
       </div>
+    </div>
+    <section class="notice-container">
+    <div class="search-area">
+      <select-box :select="search.key" :options="keyOption" @on-change="setKey"/>
+      <form name="d">
+      <text-input icon="search" :value="keyword" @on-change="setKeyword"/>
+      <button @click.prevent="onSearch" style="display:none"></button>
+      </form>
+    </div>
+      <table>
+        <colgroup>
+        <col width="15%"/>
+        <col width="50%"/>
+        <col width="20%"/>
+        <col width="15%"/>
+        </colgroup>
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성일자</th>
+            <th>조회수</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="notice of importantNoticeList" :key="`tbody-tr-important-${notice.no}`" @click="moveDetail(notice.no)"
+          class="important-notice">
+            <td>{{notice.no}}</td>
+            <td>{{notice.title }}</td>
+            <td>{{notice.regDate}}</td>
+            <td>{{ notice.hit }}</td>
+          </tr>
+
+          <tr v-if="!noticeList.length">
+            <td colspan="4">
+              올라온 게시물이 없습니다.
+            </td>
+          </tr>
+          <tr v-else v-for="notice of noticeList" :key="`tbody-tr-${notice.no}`" @click="moveDetail(notice.no)">
+            <td>{{notice.no}}</td>
+            <td>{{notice.title }}</td>
+            <td>{{notice.regDate}}</td>
+            <td>{{ notice.hit }}</td>
+          </tr>
+        </tbody>
+      <round-button text="공지추가" class="add-notice-btn" @event="addNotice"/>
+      </table>
+      <div class="page-container" @click="setPage">
+        <a href="#" v-if="page-2>1">1</a>
+        <span v-if="page-3>1" class="ellipsis">…</span>
+        <a href="#" v-for="i in [2, 1].filter(val => page-val>0)" :key="`page-btn-${page-i}`">{{ page-i }}</a>
+        <a href="#" class="selected">{{page}}</a>
+        <a href="#" v-for="i in [1, 2].filter(val => page+val <= totalpage)" :key="`page-btn-${page+i}`">{{ page+i }}</a>
+        <span v-if="page+3<totalpage" class="ellipsis">…</span>
+        <a href="#" v-if="page+2<totalpage">{{ totalpage }}</a>
+      </div>
+    </section>
   </main>
 </template>
 
 <script>
-import { getNoticeList } from "@/api/notice";
+import { getNoticeList, getNoticeListCount } from "@/api/notice";
 import { mapState } from "vuex";
-import TextInput from "../common/TextInput.vue";
+import RoundButton from "@/components/common/RoundButton.vue";
+import TextInput from "@/components/common/TextInput.vue";
+import SelectBox from "@/components/common/SelectBox.vue";
 
 export default {
-  components: { TextInput },
+  components: { RoundButton, TextInput, SelectBox },
   name: "NoticeList",
   data() {
     return {
-      // heads: ["번호", "제목", "작성일자", "조회수"],
-      // ratio: [`15%`, `50%`, `25%`, `10%`],
-      data: [],
+      importantNoticeList: [],
+      noticeList: [],
       keyword: "",
       key: "title",
-      ...mapState("UserStore", ["userInfo"]),
+      page: 1,
+      amount: 8,
+      totalpage: 1,
+      keyOption: [
+        {text:"제목", value:"title"},
+        {text:"내용", value:"content"},
+      ],
+      search: {
+        key: "제목"
+      },
     };
   },
   methods: {
+    // 검색 이벤트 : 검색창에서 Enter 클릭 시 발생
+    onSearch() {
+      this.page = 1;
+      this.getListCount();
+      this.getList(1);
+      this.getList(0);
+    },
+    // 페이지 변경 이벤트 : A 태그 틀릭 시 발생
+    setPage($event){
+      if($event.target.tagName==="A"){
+        this.page = +$event.target.text;
+      }
+    },
+    // 키워드(검색창) 변경 이벤트
+    setKeyword(value){
+      this.keyword = value;
+    },
+    // 검색조건 변경 이벤트
+    setKey(option){
+      this.key = option.value,
+      this.search.key = option.text;
+      this.onSearch();
+    },
+    // 상세 페이지 이동 이벤트
     moveDetail(no) {
       this.$router.push(`/notice/detail/${no}`);
     },
-    getList(page, amount) {
-      console.log(page, amount);
-      const params = {keyword: this.keyword, key: this.key, type:0, amount: 20};
-      const callback = (res) => {this.data = res.data};
+    // 공지사항 목록 요청 이벤트
+    getList(type) {
+      const params = {keyword: this.keyword, key: this.key, amount: this.amount, page:this.page, start: 0, type: type? 1: 0};
+      const callback = (res) => {
+        if(type) this.importantNoticeList = res.data;
+        else this.noticeList = res.data
+      };
       const fail = (error) => console.log(error);
       getNoticeList(params, callback, fail);
     },
+    // 공지추가 페이지 이동 이벤트
     addNotice() {
       this.$router.push(`/notice/add`);
+    },
+    // 페이징을 위한 전체 공지사항 개수 요청 이벤트
+    getListCount(){
+      const params = {keyword: this.keyword, key: this.key, amount: this.amount};
+    const resolve = (res) => {
+      this.totalpage = res.data.totalpage;
+    }
+    const reject = (error) => console.log(error);
+    getNoticeListCount(params, resolve, reject);
+    }
+  },
+  computed: {
+    ...mapState("UserStore", ["userInfo"]),
+  },
+  watch: {
+    page() {
+      this.getList();
     }
   },
   created() {
-    this.getList();
+    this.getListCount();
+    this.getList(1);
+    this.getList(0);
   },
 };
 </script>
 
 <style scoped>
 main {
-  width: 100%;
-  max-width: 1080px;
-  margin: auto;
-}
-a {
-  text-decoration: none;
-  color: rgb(46, 46, 46);
-}
-body {
-  height: 100vh;
   display: flex;
   flex-direction: column;
-}
-body > * {
-  flex-shrink: 0;
-}
-.map-section {
-  flex-shrink: 1;
-  flex-grow: 1;
-  display: flex;
-}
-/* Map Section */
-#map {
-  height: 100%;
-  flex-grow: 1;
-  background-color: blueviolet;
-}
-.data-list {
-  width: 400px;
-  background-color: #fff;
-  padding: 21px 16px 10px;
-  overflow-y: scroll;
-}
-.data-menu {
-  display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+}
+.main-header {
+  background-color: var(--navy);
+  color: var(--white);
   width: 100%;
+  height: 160px;
 }
-.data-menu button {
-  padding: 10px;
+.main-header > div {
   width: 100%;
-  background-color: #fff;
-  border: solid 1px #aaa;
-  font-weight: bold;
+  max-width: 1080px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  margin: auto;
 }
-.data-menu > button:nth-child(2) {
-  background-color: #5a7a94;
-  color: white;
+.main-header h1 {
+  margin: 75px 0 5px;
 }
-.data-sort {
+.notice-container {
+  width: 100%;
+  max-width: 1080px;
+  margin: auto;
+  box-sizing: border-box;
   padding: 10px;
-  font-size: 17px;
-  display: flex;
-  justify-content: space-evenly;
-}
-.data-sort > a:nth-child(1) {
-  color: #346f9f;
-  font-weight: bold;
-}
-.data-item {
-  list-style: none;
-  display: flex;
-  height: 120px;
-  padding: 20px 20px 20px 0;
-  border-bottom: 1px solid #e2e2e2;
-}
-.data-item > div:nth-child(2) {
-  padding-left: 16px;
-  flex-grow: 1;
-  align-self: center;
-}
-.data-item > div:nth-child(2) > p {
-  margin: 0;
-}
-.data-item > div:nth-child(2) > p:first-child {
-  font-weight: 900;
-  font-size: 1.125em;
-  margin-bottom: 5px;
-}
-.data-item > div:nth-child(2) > p:last-child {
-  color: #444;
-  font-size: 0.825em;
-}
-.data-item > .img-box {
-  flex-grow: 2;
-  height: 100%;
-}
-/* Nav topic */
-.nav-topic ul > li:nth-child(3),
-.nav-topic ul > li:nth-child(3) > a {
-  border-color: var(--main-color);
-  color: var(--main-color);
-}
-
-.notice-title {
-  margin-top: 50px;
-  font-size: 35px;
-  margin-bottom: 20px;
   position: relative;
 }
-.notice-post {
+.search-area {
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+  height: 50px;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 1;
+}
+.search-area > * {
+  margin-left: 10px;
+}
+.notice-container table {
   position: relative;
   width: 100%;
-  table-layout: fixed;
-  border-top: 2px solid #000;
-  border-bottom: 1px solid #dadada;
-  line-height: 20px;
-  font-size: 18px;
+  max-width: 1000px;
+  margin: auto;
   border-collapse: collapse;
+  border-top: 3px solid var(--navy);
+  border-bottom: 3px solid var(--navy);
+  font-size: 14px;
 }
-
-.notice-post > thead > tr {
-  border-bottom: 1px solid rgb(225, 225, 225);
-  height: 60px;
-  text-align: center;
+.notice-container table td,
+.notice-container table th {
+ padding-left: 15px;
 }
-.notice-post > tbody > tr {
-  border-bottom: 1px solid rgb(225, 225, 225);
-  height: 55px;
+.notice-container table > thead {
+  border-bottom: 1px solid var(--navy);
+}
+.notice-container table > thead > tr {
+  height: 40px;
+  text-align: left;
+  font-size: 14px;
+  color: var(--navy);
+}
+.notice-container table > tbody > tr {
+  border-bottom: 1px solid var(--darkgray);
+  height: 50px;
   cursor: pointer;
 }
-.notice-post > tbody > tr:hover {
-  background-color: #fcfcfc;
+.notice-container table > tbody > tr:hover {
+  opacity: 0.7;
+  background-color: var(--gray);
+  color: var(--navy);
 }
-.notice-post > tbody > tr > td {
-  text-align: center;
+.notice-container table > tbody > .important-notice {
+  background-color: var(--gray);
+  color: var(--navy);
 }
-.notice-post > tbody > tr > td:nth-child(2) {
-  padding-left: 10%;
-  text-align: left;
-}
-
-.search {
+.page-container {
+  width: 100%;
   display: flex;
   justify-content: center;
-  margin: 80px;
-  height: 40px;
-  text-align: center;
+  align-items: center;
 }
-.search-text {
-  padding: 7px;
-  width: 40%;
-}
-.search-btn {
-  padding: 8px 16px;
-  margin: 0;
-  flex-grow: 5;
-  border: 1px solid var(--main-color);
-  border-left: 0;
-  color: #fff;
-  background-color: var(--main-color);
-}
-.content {
-  margin: 24px 16px;
-}
-hr {
-  color: rgb(180, 180, 180);
-}
-.btn-add {
-  position: absolute;
-  right: 0;
-  font-size: 14px;
-  bottom: 0;
+.page-container a {
+  cursor: pointer;
   display: block;
-  margin-left: 10px;
-  width: 80px;
-  height: 32px;
-  line-height: 32px;
+  width: 24px;
+  height: 24px;
+  margin: 20px 2px;
+  line-height: 24px;
+  font-size: 16px;
   text-align: center;
   text-decoration: none;
-  border: 1px solid #aaa;
-  cursor: pointer;
-  color: #000;
+  color: var(--black);
 }
-/* main {
-  margin: auto;
-  max-width: 1080px;
-}
-h1 {
-  margin-top: 40px;
-}
-table,
-table * {
-  box-sizing: content-box;
-  border-collapse: collapse;
-}
-table {
-  margin: auto;
-  width: 100%;
-}
-th,
-td {
-  padding: 10px 20px;
-  text-align: left;
-}
-th {
+.page-container a:hover {
   color: var(--navy);
-  font-weight: 900;
-  border-bottom: 3px solid var(--navy);
+  font-weight: 700;
 }
-tr {
-  width: 100%;
+.page-container > .ellipsis {
+  background-color: var(--darkgray);
+  cursor: default;
 }
-tbody {
-  position: relative;
-}
-tbody > tr {
-  cursor: pointer;
-  border-bottom: 0.5px solid #f5f5f5;
-  height: 60px;
-}
-tbody > tr:hover {
+.page-container > a.selected {
   background-color: var(--gray);
+  color: var(--navy);
+  font-weight: 700;
+  border-radius: 5px;
 }
-table > thead > tr:first-child > th:first-child {
-  border-top-left-radius: 10px;
-}
-table > thead > tr:first-child > th:last-child {
-  border-top-right-radius: 10px;
-  border-right: 0;
-}
-table > tbody > tr.empty {
+.add-notice-btn {
   position: absolute;
-  width: 100%;
-  height: 200px;
-  line-height: 200px;
-  text-align: center;
-  opacity: 0.7;
-} */
+  margin-top: 15px;
+  right: 10px;
+}
 </style>

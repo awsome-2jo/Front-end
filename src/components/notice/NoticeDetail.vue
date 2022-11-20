@@ -54,8 +54,7 @@
             <a class="modify-btn" @click.prevent="moveNoticeModify">수정</a>
             <a class="delete-btn" @click.prevent="deleteNotice">삭제</a>
           </div>
-        <article class="notice-body">
-          {{ notice?.content }}
+        <article class="notice-body"  v-html="notice?.content">
         </article>
       </section>
       <!-- <section class="comment-container">
@@ -110,7 +109,7 @@ export default {
     const fail = (error) => {
       console.log(error);
       alert("공지사항을 불러올 수 없습니다!");
-      this.moveNoticeList();
+      this.$router.back();
     }
 
     getNoticeDetail(this.$route.params.no, callback, fail);
