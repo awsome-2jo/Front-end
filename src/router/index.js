@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import HomeView from "../views/HomeView";
 import AptView from "../views/AptView";
 import NoticeView from "../views/NoticeView";
+import NewsView from "../views/NewsView";
 
 Vue.use(VueRouter);
 
@@ -55,7 +56,14 @@ const routes = [
       },
     ],
   },
-
+  {
+    path: "/news",
+    name: "newsView",
+    component: NewsView,
+    meta: {
+      title: "HOME:IN - 부동산 소식",
+    },
+  },
   {
     path: "/about",
     name: "about",
