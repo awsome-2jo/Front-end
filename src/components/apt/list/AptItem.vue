@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="img-container">
-      <img :src="require(`@/assets/imgs/apt-${(+data.no % 6) + 1}.jpg`)" />
+      <img :src="require(`@/assets/imgs/apt-${(+data.aptCode % 6) + 1}.jpg`)" />
     </div>
     <div class="info-container">
-      <span class="dong">{{ data.dong }}</span>
+      <span class="dong">{{ data.roadName }}</span>
       <h4 class="name">{{ data.apartmentName }}</h4>
 
       <div class="tag-container">

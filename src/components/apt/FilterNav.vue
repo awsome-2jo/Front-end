@@ -2,9 +2,9 @@
   <nav>
     <div>
       <div class="select-component">
-        <select-box :select="sido()" :options="sidoList()" default="광역시/도" @on-change="setSido" />
-        <select-box :select="gugun()" :options="gugunList()" default="시/군/구" @on-change="setGugun" />
-        <select-box :select="dong()" :options="dongList()" default="동/읍/면" @on-change="setDong" />
+        <select-box :select="sido" :options="sidoList" default="광역시/도" @on-change="setSido" />
+        <select-box :select="gugun" :options="gugunList" default="시/군/구" @on-change="setGugun" />
+        <select-box :select="dong" :options="dongList" default="동/읍/면" @on-change="setDong" />
       </div>
       <div class="search-component"><text-input icon="search" /></div>
     </div>
@@ -21,12 +21,17 @@ export default {
   components: { SelectBox, TextInput },
   data() {
     return {
-      ...mapState("AptStore", ["sido", "gugun", "dong", "sidoList", "gugunList", "dongList"]),
     };
   },
   methods: {
-    ...mapActions("AptStore", ["setSido", "setGugun", "setDong"]),
+    ...mapActions("AptStore", ["setSido", "setGugun", "setDong", "setSidoList"]),
   },
+  computed: {
+    ...mapState("AptStore", ["sido", "gugun", "dong", "sidoList", "gugunList", "dongList"]),
+  },
+  created() {
+    this.setSidoList();
+  }
 };
 </script>
 
