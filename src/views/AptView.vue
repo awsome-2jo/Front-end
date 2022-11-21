@@ -14,9 +14,6 @@ import KakaoMap from "@/components/apt/KakaoMap.vue";
 export default {
   components: { SideDrop, FilterNav, KakaoMap },
   name: "AptMap",
-  created() {
-    this.$store.dispatch("setSidoList");
-  },
 };
 </script>
 

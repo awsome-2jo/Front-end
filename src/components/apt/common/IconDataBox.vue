@@ -13,6 +13,11 @@
 <script>
 export default {
   name: "IconDataBox",
+  props: {
+    icon: String,
+    label: String,
+    value: String,
+  },
   data() {
     return {
       iconArr: {
@@ -25,9 +30,6 @@ export default {
         bus: "fa-bus",
         school: "fa-schoo",
       },
-      icon: "dollar",
-      label: "test1",
-      value: "test2",
     };
   },
 };
@@ -48,7 +50,8 @@ export default {
   margin-right: 10px;
 }
 .label {
-  font-size: 14px;
+  font-size: 12px;
+  margin-bottom: 2px;
 }
 .value {
   font-size: 16px;

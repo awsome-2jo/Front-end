@@ -3,14 +3,19 @@
     <div class="handler drag-block" @mousedown="mouseDownHandler">
       <span>|||</span>
     </div>
-    <div class="content" ref="side">
+    <div ref="side" class="side-container">
       <div class="address-header">{{ sido }} {{ gugun }} {{ dong }}</div>
-      <div class="tap-container">
-        <div :class="{ selected: mode === `info` }" @click="setMode('info')">지역 정보</div>
-        <div :class="{ selected: mode === `list` }" @click="setMode('list')">아파트 목록</div>
+      <div class="content">
+        <div class="reg-content">
+          <div class="tap-container">
+            <div :class="{ selected: mode === `info` }" @click="setMode('info')">지역 정보</div>
+            <div :class="{ selected: mode === `list` }" @click="setMode('list')">아파트 목록</div>
+          </div>
+          <local-info v-if="mode === `info`" />
+          <apt-list v-if="mode === `list`" />
+        </div>
+        <apt-detail />
       </div>
-      <local-info v-if="mode === `info`" />
-      <apt-list v-if="mode === `list`" />
     </div>
   </div>
 </template>
@@ -19,15 +24,16 @@
 import { mapState } from "vuex";
 import AptList from "@/components/apt/list/AptList.vue";
 import LocalInfo from "@/components/apt/list/LocalInfo.vue";
+import AptDetail from "./detail/AptDetail.vue";
 
 export default {
-  components: { AptList, LocalInfo },
+  components: { AptList, LocalInfo, AptDetail },
   name: "SideDrop",
   data() {
     return {
       x: 0,
       list: [],
-      mode: "list",
+      mode: "info",
     };
   },
   methods: {
@@ -44,12 +50,12 @@ export default {
       window.removeEventListener("mousemove", this.mouseMoveHandler);
       window.removeEventListener("mouseup", this.mouseUpHandler);
       // 현재 x값에 따라 지정된 4개의 위치로 x 값 설정
-      if (this.x < window.innerWidth / 6) {
+      if (this.x < 200) {
         this.x = 0;
-      } else if (this.x < window.innerWidth / 3) {
-        this.x = window.innerWidth / 4;
-      } else if (this.x < window.innerWidth / 1.5) {
-        this.x = window.innerWidth / 2;
+      } else if (this.x < 600) {
+        this.x = 420;
+      } else if (this.x < 880) {
+        this.x = 840;
       } else {
         this.x = window.innerWidth;
       }
@@ -73,10 +79,11 @@ export default {
 <style scoped>
 .component {
   z-index: 8000;
-  height: calc(100% - 140px);
+  height: calc(100% - 138px);
   position: absolute;
   right: 0;
   display: flex;
+  overflow: hidden;
 }
 .component::before {
   content: "";
@@ -107,10 +114,8 @@ export default {
   margin-left: -2px;
   opacity: 0.3;
 }
-.content {
-  width: 25vw;
-  height: 100%;
-  margin-top: -2px;
+.side-container {
+  width: 420px;
   background-color: var(--white);
   border: 1px solid var(--gray);
   box-shadow: -2px 0px 10px var(--shadow);
@@ -118,13 +123,26 @@ export default {
   transition: all 0.1s ease-out;
   overflow: hidden;
 }
+.content {
+  display: flex;
+  height: 100%;
+  margin-top: -2px;
+  overflow: hidden;
+}
+.reg-content {
+  border-right: 1px solid var(--gray);
+  max-width: 420px;
+  min-width: 420px;
+}
 .address-header {
+  width: 100%;
   height: 60px;
   display: flex;
   padding: 0 15px;
   align-items: center;
   font-size: 16px;
   background-color: var(--gray);
+  white-space:nowrap;
 }
 .tap-container {
   height: 45px;
@@ -135,8 +153,10 @@ export default {
   align-items: center;
   justify-content: center;
   width: 100%;
-  border-bottom: 1.5px solid var(--darkgray);
+  padding-top: 3px;
+  border-bottom: 3px solid var(--darkgray);
   cursor: pointer;
+  transition: all 0.1s linear;
 }
 .tap-container > div.selected {
   border-bottom: 3px solid var(--navy);
