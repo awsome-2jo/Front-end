@@ -45,6 +45,11 @@ export default {
       }
       this.list = [...this.list, ...list];
     },
+    scrollEvent() {
+      if (this.$refs.list.scrollHeight - window.scrollY < 900) {
+        this.getList();
+      }
+    },
   },
   created() {
     let params = {
@@ -65,11 +70,10 @@ export default {
     this.getList();
 
     // 무한 스크롤 이벤트
-    window.addEventListener("scroll", () => {
-      if (this.$refs.list.scrollHeight - window.scrollY < 900) {
-        this.getList();
-      }
-    });
+    window.addEventListener("scroll", this.scrollEvent);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.scrollEvent);
   },
 };
 </script>
@@ -87,7 +91,7 @@ export default {
   margin: auto;
   height: 50px;
   display: flex;
-  padding: 0 10px;
+  padding: 0 5px;
   justify-content: flex-end;
   position: relative;
   z-index: 1;
