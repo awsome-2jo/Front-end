@@ -7,10 +7,10 @@
     <section class="notice-container">
       <table>
         <colgroup>
-          <col width="15%"/>
-          <col width="50%"/>
-          <col width="20%"/>
-          <col width="15%"/>
+          <col width="15%" />
+          <col width="50%" />
+          <col width="20%" />
+          <col width="15%" />
         </colgroup>
         <thead>
           <tr>
@@ -21,14 +21,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>{{notice.no}}</td>
-            <td>{{notice.title }}</td>
-            <td>{{notice.regDate}}</td>
+          <tr v-if="notice">
+            <td>{{ notice.no }}</td>
+            <td>{{ notice.title }}</td>
+            <td>{{ notice.regDate }}</td>
             <td>{{ notice.hit }}</td>
           </tr>
           <tr>
-            <td colspan="4">
+            <td colspan="4" v-if="notice">
               <div class="content-area" v-html="notice.content"></div>
             </td>
           </tr>
@@ -48,7 +48,7 @@ import RoundButton from "../common/RoundButton.vue";
 export default {
   name: "noticeDetail",
   components: {
-    RoundButton
+    RoundButton,
   },
   data() {
     return {
@@ -61,23 +61,23 @@ export default {
       this.$router.push(`/notice/modify/${this.notice.no}`);
     },
     deleteNotice() {
-      if(confirm("정말로 삭제하시겠습니까?")) {
+      if (confirm("정말로 삭제하시겠습니까?")) {
         deleteNotice(this.notice.no, this.moveNoticeList);
       }
     },
     moveNoticeList() {
       this.$router.push(`/notice/list`);
-    }
+    },
   },
   created() {
     const callback = (res) => {
       this.notice = res.data;
-    }
+    };
     const fail = (error) => {
       console.log(error);
       alert("공지사항을 불러올 수 없습니다!");
       this.$router.back();
-    }
+    };
 
     getNoticeDetail(this.$route.params.no, callback, fail);
   },
@@ -137,7 +137,7 @@ export default {
 }
 .notice-container table td,
 .notice-container table th {
- padding-left: 15px;
+  padding-left: 15px;
 }
 .notice-container table > thead {
   border-bottom: 1px solid var(--navy);

@@ -29,6 +29,7 @@ async function getNoticeListCount(params, success, fail) {
  * @param {Function} fail 실패시 실행할 함수
  */
 async function addNotice(body, success, fail) {
+  api.defaults.headers["access-token"] = sessionStorage.getItem("access-token");
   await api.post(`/notice/add`, body).then(success).catch(fail);
 }
 

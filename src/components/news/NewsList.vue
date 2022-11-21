@@ -31,44 +31,36 @@ export default {
     setQuery(value) {
       this.query = value;
     },
-    getList() {
-      const tempItem = {
-        title: "부동산 공시가 70%대→60%대로…‘공시가 현실화율’ 손본다",
-        originallink: "https://n.news.naver.com/mnews/article/018/0005370844?sid=101",
-        image: "https://imgnews.pstatic.net/image/018/2022/11/20/0005370844_001_20221120193401123.jpg",
-        description:
-          "최근 집값이 하락하면서 실거래가보다 공시가격이 높은 ‘역전현상’이 속출하고 있다. 정부가 부동산 공시가격 현실화율을 로드맵 수립 이전인 2020년 수준으로 돌려 집값보다 비싼 공시가격을 낮추겠다는 계획이다. 집값 하",
-      };
-      let list = [];
-      for (let i = 0; i < 12; i++) {
-        list.push(tempItem);
-      }
+    addList(list) {
       this.list = [...this.list, ...list];
     },
+    getList() {
+      let params = {
+        query: this.query,
+        display: this.display,
+        start: this.start,
+        sort: this.sort,
+      };
+      this.start += this.display;
+      const resolve = (res) => {
+        console.log(res);
+        this.addList(res.data);
+      };
+      const reject = (error) => {
+        console.log(error);
+      };
+      getNews(params, resolve, reject);
+    },
     scrollEvent() {
-      if (this.$refs.list.scrollHeight - window.scrollY < 900) {
+      if (this.$refs.list.scrollHeight - window.scrollY < 800) {
         this.getList();
       }
     },
   },
   created() {
-    let params = {
-      query: this.query,
-      display: this.display,
-      start: this.start,
-      sort: this.sort,
-    };
-    const resolve = (res) => {
-      console.log(res);
-    };
-    const reject = (error) => {
-      console.log(error);
-    };
-    getNews(params, resolve, reject);
+    this.getList();
   },
   mounted() {
-    this.getList();
-
     // 무한 스크롤 이벤트
     window.addEventListener("scroll", this.scrollEvent);
   },

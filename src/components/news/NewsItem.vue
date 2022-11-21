@@ -5,8 +5,8 @@
         <img :src="data.image" :alt="data.title" />
       </div>
       <div class="text-container">
-        <h3>{{ data.title }}</h3>
-        {{ data.description }}
+        <h3 v-html="data.title"></h3>
+        <span v-html="data.description"></span>
       </div>
     </div>
   </div>
