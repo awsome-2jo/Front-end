@@ -22,4 +22,4 @@ async function getBlog(param, success, fail) {
   await api.get(`/naver/blog`, { params: param }).then(success).catch(fail);
 }
 
-export default { getNews, getBlog };
+export { getNews, getBlog };

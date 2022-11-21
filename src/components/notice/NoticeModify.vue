@@ -2,7 +2,7 @@
   <div>
     <div class="title-container">
       <span>제목</span>
-      <input v-model="title">
+      <input v-model="title" />
     </div>
     <tip-tap :value="content" @input="setContent" />
     <div class="btn-container">
@@ -21,7 +21,7 @@ export default {
   name: "noticeModify",
   components: {
     TipTap,
-    RoundButton
+    RoundButton,
   },
   data() {
     return {
@@ -29,7 +29,7 @@ export default {
       no: null,
       title: "",
       content: "",
-    }
+    };
   },
   methods: {
     setContent(value) {
@@ -39,18 +39,18 @@ export default {
       this.$router.push(`/notice/list`);
     },
     async submitNotice() {
-      let body = {no: this.no, title: this.title, content: this.content};
+      let body = { no: this.no, title: this.title, content: this.content };
       const resolve = (res) => {
-        if (res.status===200) this.$router.push(`/notice/detail/${res.data}`)
+        if (res.status === 200) this.$router.push(`/notice/detail/${res.data}`);
       };
       const reject = (error) => console.log(error);
 
-      if(!this.$route.params.no) addNotice(body, resolve, reject);
+      if (!this.$route.params.no) addNotice(body, resolve, reject);
       else modifyNotice(body, resolve, reject);
-    }
+    },
   },
   created() {
-    if(!this.$route.params.no) return;
+    if (!this.$route.params.no) return;
     const resolve = (res) => {
       this.no = res.data.no;
       this.title = res.data.title;
@@ -60,7 +60,7 @@ export default {
 
     getNoticeDetail(this.$route.params.no, resolve, reject);
   },
-}
+};
 </script>
 
 <style scoped>
@@ -93,6 +93,7 @@ export default {
 }
 .btn-container {
   margin: auto;
+  margin-bottom: 50px;
   width: 100%;
   max-width: 1000px;
   height: 50px;

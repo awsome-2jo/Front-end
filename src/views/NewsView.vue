@@ -12,6 +12,7 @@
 
 <script>
 import NewsList from "@/components/news/NewsList.vue";
+
 export default {
   name: "NewsView",
   components: {
