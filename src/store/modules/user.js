@@ -26,16 +26,11 @@ const UserStore = {
       // TODO: 요청 전 input validation check 필요
 
       const callback = (res) => {
-        console.log("login");
-        console.log(res);
-
         // 로그인 성공
         if (res.status == 200) {
           context.commit("SET_USER_INFO", res.data.userInfo, res.data["access-token"]);
           sessionStorage.setItem("access-token", res.data["access-token"]);
           // sessionStorage.setItem("refresh-token", res.data["refresh-token"]);
-
-          context.dispatch("userCheck");
         }
         // 로그인 실패: 잘못된 아이디
         else if (res.status == 204) {
@@ -54,10 +49,11 @@ const UserStore = {
         console.log(error);
       };
 
-      login(user, callback, fail);
+      await login(user, callback, fail);
     },
     async logout(context) {
       context.commit("LOGOUT");
+      alert("로그아웃되었습니다!");
     },
     async userCheck() {
       console.log("userCheck");

@@ -41,16 +41,18 @@ export default {
     },
     async onLogin() {
       await this.login({ id: this.id, pass: this.pass });
-      if(this.userInfo) this.setLoginModal();
+      if (this.userInfo) {
+        this.setLoginModal();
+      }
     },
     close($event) {
-      if($event.currentTarget===$event.target) this.setLoginModal();
+      if ($event.currentTarget === $event.target) this.setLoginModal();
       else $event.stopPropagation();
-    }
+    },
   },
   computed: {
     ...mapState("UserStore", ["loginModal", "userInfo"]),
-  }
+  },
 };
 </script>
 
