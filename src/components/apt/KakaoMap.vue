@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { getAptList } from "@/api/apt";
+import { getAptList, getDong, getGugun, getSido } from "@/api/apt";
 import { mapActions, mapState } from "vuex";
 
 // 카카오 마커 이미지, 곧 수정할 예정
@@ -31,6 +31,8 @@ export default {
     ...mapActions("AptStore", ["setMap"]),
     // 지도 삽입 메서드
     initMap() {
+      this.$el.addEventListener("click", this.zumInReg);
+
       let options = {
         //지도를 생성할 때 필요한 기본 옵션
         center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
@@ -49,9 +51,9 @@ export default {
 
     // 지도 이동 메서드
     setLocation() {
-      var callback = (result, status) => {
+      const callback = (result, status) => {
         if (status === kakao.maps.services.Status.OK) {
-          // 이동할 
+          // 이동할
           this.map.panTo(new kakao.maps.LatLng(result[0].y, result[0].x));
           this.map.setLevel(this.dong ? 2 : this.gugun ? 4 : this.sido ? 6 : 12);
           this.setCenter();
@@ -70,35 +72,91 @@ export default {
           let regcode = result[0].code;
 
           // 확대 크기(level)에 따라 지역코드 길이 조절
-          if (level > 5) regcode = regcode.slice(0, 2);
-          else if (level > 4) regcode = regcode.slice(0, 5);
-          else if (level > 3) regcode = regcode.slice(0, 7);
-          console.log("level:", level);
-          console.log("regcode:", regcode);
-          this.getAptMarkers(regcode);
+          if (level >= 5) this.drawRegMarkers(result[0], level);
+          else {
+            if (level > 4) regcode = regcode.slice(0, 2);
+            else if (level > 3) regcode = regcode.slice(0, 5);
+            else if (level > 2) regcode = regcode.slice(0, 7);
+            console.log("level:", level);
+            console.log("regcode:", regcode);
+            this.getAptMarkers(regcode);
+          }
         }
       };
       this.geocoder.coord2RegionCode(center.getLng(), center.getLat(), callback);
     },
 
-    // 아파트 마커 표시 메서드
+    // 모든 마커 삭제
+    resetMarkers() {
+      for (let arr in this.markers) {
+        for (let marker of this.markers[arr]) {
+          marker.setMap(null);
+        }
+      }
+      this.markers = {
+        apt: [],
+        reg: [],
+      };
+    },
+
+    // 지역 마커 그리기
+    drawRegMarkers(data, level) {
+      this.resetMarkers();
+      let regcode = data.code;
+      let address = [];
+
+      const resolve = (res) => {
+        const callback = (result, status, item) => {
+          if (status === kakao.maps.services.Status.OK) {
+            let latlng = new kakao.maps.LatLng(result[0].y, result[0].x);
+            let regMarker = new kakao.maps.CustomOverlay({
+              map: this.map, // 마커를 표시할 지도
+              position: latlng,
+              title: item.name,
+              // image: this.markerImage, // 마커 이미지
+              content: `<div class="map-reg-marker" data-address="${result[0].address.address_name}" data-level="${level}">${item.name}</div>`,
+            });
+            this.markers.reg.push(regMarker);
+          }
+        };
+
+        for (let item of res.data) {
+          this.geocoder.addressSearch([...address, item.name].join(" "), (res, stats) => callback(res, stats, item));
+        }
+        this.data.reg = res.data;
+      };
+      const reject = (err) => {
+        console.log(err);
+      };
+
+      if (level < 7) {
+        regcode = regcode.slice(0, 5);
+        address = [data.region_1depth_name, data.region_2depth_name];
+        getDong(regcode, resolve, reject);
+      } else if (level < 11) {
+        regcode = regcode.slice(0, 2);
+        address = [data.region_1depth_name];
+        getGugun(regcode, resolve, reject);
+      } else {
+        getSido(resolve, reject);
+      }
+    },
+
+    // 아파트 마커 정보 추출 메서드
     getAptMarkers(regcode) {
       let params = { regcode: regcode, amount: 50 };
       const resolve = (res) => {
         this.data.apt = res.data;
       };
       const reject = (err) => console.log(err);
-      getAptList(params, resolve, reject).then(this.drawMarkers);
+      getAptList(params, resolve, reject).then(this.drawAptMarkers);
     },
-
-    // 아파트 정보 표시 메서드
-    drawMarkers() {
-      for (let marker of this.markers.apt) {
-        marker.setMap(null);
-      }
+    // 아파트 마커 그리기
+    drawAptMarkers() {
+      // 기존 마커 삭제
+      this.resetMarkers();
 
       let aptMarkers = [];
-
       for (let apt of this.data.apt) {
         var latlng = new kakao.maps.LatLng(apt.lat, apt.lng);
         aptMarkers.push(
@@ -112,6 +170,25 @@ export default {
       }
 
       this.markers.apt = aptMarkers;
+    },
+    // 지역 마커 클릭 이벤트
+    zumInReg($event) {
+      $event.stopPropagation();
+      if ($event.target.className === "map-reg-marker") {
+        // 이동할 주소
+        let address = $event.target.dataset.address;
+        let level = $event.target.dataset.level;
+        console.log(level);
+
+        const callback = (result, status) => {
+          if (status === kakao.maps.services.Status.OK) {
+            this.map.panTo(new kakao.maps.LatLng(result[0].y, result[0].x));
+            this.map.setLevel(level - 2);
+            this.setCenter();
+          }
+        };
+        this.geocoder.addressSearch(address, callback);
+      }
     },
   },
 
@@ -142,5 +219,15 @@ export default {
   width: 100%;
   height: calc(100vh - 140px);
   position: absolute;
+}
+.map-reg-marker {
+  background-color: var(--navy);
+  color: var(--white);
+  font-weight: 900;
+  padding: 10px 20px;
+  border-radius: 8px;
+  opacity: 0.9;
+  box-shadow: 1px 1px 5px var(--shadow);
+  cursor: pointer;
 }
 </style>

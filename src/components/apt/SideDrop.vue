@@ -86,7 +86,7 @@ export default {
   position: absolute;
   right: 0;
   display: flex;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .component::before {
   content: "";
