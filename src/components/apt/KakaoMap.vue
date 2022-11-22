@@ -55,8 +55,8 @@ export default {
       const callback = (result, status) => {
         if (status === kakao.maps.services.Status.OK) {
           // 이동할
-          this.map.panTo(new kakao.maps.LatLng(result[0].y, result[0].x));
           this.map.setLevel(this.dong ? 2 : this.gugun ? 4 : this.sido ? 6 : 12);
+          this.map.panTo(new kakao.maps.LatLng(result[0].y, result[0].x));
           this.setCenter();
         }
       };
@@ -145,7 +145,12 @@ export default {
     getAptMarkers(regcode) {
       let params = { regcode: regcode, amount: 50 };
       const resolve = (res) => {
+        res.data.sort((a, b)=> {
+          if(a.lat===b.lat) return a.lng - b.lng;
+          return b.lat - a.lat;
+        });
         this.data.apt = res.data;
+
       };
       const reject = (err) => console.log(err);
       getAptList(params, resolve, reject).then(this.drawAptMarkers);
@@ -157,14 +162,20 @@ export default {
 
       let aptMarkers = [];
       for (let apt of this.data.apt) {
-        var latlng = new kakao.maps.LatLng(apt.lat, apt.lng);
+        let latlng = new kakao.maps.LatLng(apt.lat, apt.lng);
         aptMarkers.push(
           new kakao.maps.CustomOverlay({
             map: this.map, // 마커를 표시할 지도
             position: latlng,
             title: apt.apartmentName,
-            // image: this.markerImage, // 마커 이미지
-            content: `<div><h1>test</h1> ${AptIcon}</div>`,
+            content: `
+            <div class="apt-marker" data-aptcode="${apt.aptCode}">
+              <div class="apt-marker-info">
+                <div class="min-deal">${this.getDealString(apt.minDealAmount)}</div>
+                <div class="max-deal">~${this.getDealString(apt.maxDealAmount)}</div>
+              </div>
+              ${AptIcon}
+            </div>`,
           })
         );
       }
@@ -183,13 +194,22 @@ export default {
         const callback = (result, status) => {
           if (status === kakao.maps.services.Status.OK) {
             console.log("결과:",result[0]);
+            this.map.setLevel(level-2);
             this.map.panTo(new kakao.maps.LatLng(result[0].y, result[0].x));
-            this.map.setLevel(level - 2);
-            this.setCenter();
+            
+            // this.setCenter();
           }
         };
         this.geocoder.addressSearch(address, callback);
       }
+    },
+    getDealString(deal) {
+      let urk = Math.round(deal / 10000);
+      let marn = deal % 10000;
+      let arr = [];
+      if (urk) arr.push(`${urk}억`);
+      if (marn) arr.push(`${marn}`);
+      return arr.join(" ");
     },
   },
 
@@ -231,12 +251,56 @@ export default {
   box-shadow: 1px 1px 5px var(--shadow);
   cursor: pointer;
 }
-/* svg */
-/* #map img[src$=".svg"] {
+.apt-marker {
+  z-index: 1;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+}
+.apt-marker:hover {
+  z-index: 2;
+  transform: scale(105%);
+  
+}
+.apt-marker > .apt-marker-info {
+  background: var(--navy);
+  border-radius: 8px;
+  color: var(--white);
+  padding: 3px 6px;
+  text-align: center;
+}
+.apt-marker > .apt-marker-info::after {
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  margin-left: -5px;
+  border-bottom: 10px solid transparent;
+  border-left: 5px solid transparent;
+  border-top: 10px solid var(--navy);
+  border-right: 5px solid transparent;
+}
+#map img {
+}
+/* .apt-marker > .apt-marker-info h4 {
+  margin: 0;
+  font-size: 6px;
+  text-align: center;
 } */
-.apt-icon-svg {
+.apt-marker > .apt-marker-info{
+  font-size: 1px;
+}
+.apt-marker > .apt-marker-info .min-deal {
+  font-size: 12px;
+  font-weight: 900;
+}
+.apt-marker svg {
   width: 60px;
   height: 60px;
-  filter: drop-shadow(2px 4px 3px var(--shadow)) invert(5%) sepia(100%) saturate(200%) hue-rotate(200deg) brightness(90%) contrast(100%);
+}
+.apt-marker svg .svg-color {
+  fill: var(--navy);
 }
 </style>
