@@ -19,9 +19,11 @@ export default {
       markerImage: null,
       markers: {
         apt: [],
+        reg: [],
       },
       data: {
         apt: [],
+        reg: [],
       },
     };
   },
@@ -38,20 +40,27 @@ export default {
       this.geocoder = new kakao.maps.services.Geocoder();
       let imageSize = new kakao.maps.Size(24, 35);
       this.markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+      // 지도 불러오기 성공 시 위치 default로 설정하기
       this.setLocation();
+      // 지도 이동 이벤트 추가
       kakao.maps.event.addListener(this.map, "dragend", this.setCenter);
+      kakao.maps.event.addListener(this.map, "zoom_changed", this.setCenter);
     },
+
     // 지도 이동 메서드
     setLocation() {
       var callback = (result, status) => {
         if (status === kakao.maps.services.Status.OK) {
+          // 이동할 
           this.map.panTo(new kakao.maps.LatLng(result[0].y, result[0].x));
-          this.map.setLevel(3);
+          this.map.setLevel(this.dong ? 2 : this.gugun ? 4 : this.sido ? 6 : 12);
+          this.setCenter();
         }
       };
       let address = [this.sido, this.gugun, this.dong].filter((val) => val).join(" ");
       this.geocoder.addressSearch(address ? address : "서울특별시", callback);
     },
+
     // 중심좌표 변경 메서드
     setCenter() {
       let center = this.map.getCenter();
@@ -59,28 +68,29 @@ export default {
         if (status === kakao.maps.services.Status.OK) {
           let level = this.map.getLevel();
           let regcode = result[0].code;
-          console.log(level);
+
           // 확대 크기(level)에 따라 지역코드 길이 조절
-          if (level > 11) regcode = "";
-          else if (level > 8) regcode = regcode.slice(0, 2);
-          else if (level > 5) regcode = regcode.slice(0, 5);
+          if (level > 5) regcode = regcode.slice(0, 2);
+          else if (level > 4) regcode = regcode.slice(0, 5);
           else if (level > 3) regcode = regcode.slice(0, 7);
-          console.log(regcode);
+          console.log("level:", level);
+          console.log("regcode:", regcode);
           this.getAptMarkers(regcode);
         }
       };
       this.geocoder.coord2RegionCode(center.getLng(), center.getLat(), callback);
     },
+
     // 아파트 마커 표시 메서드
     getAptMarkers(regcode) {
       let params = { regcode: regcode, amount: 50 };
       const resolve = (res) => {
-        console.log(res.data.length);
         this.data.apt = res.data;
       };
       const reject = (err) => console.log(err);
       getAptList(params, resolve, reject).then(this.drawMarkers);
     },
+
     // 아파트 정보 표시 메서드
     drawMarkers() {
       for (let marker of this.markers.apt) {

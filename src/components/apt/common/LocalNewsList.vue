@@ -1,17 +1,15 @@
 <template>
   <div class="container">
-    <h2>
-      지역 뉴스<a href="#">더보기 ></a>
-    </h2>
+    <h2>지역 뉴스<a href="#">더보기 ></a></h2>
     <ul>
-      <news-mini-item v-for="item, idx in list" :key="`news-mini-item-${idx}`" :data="item"/>
+      <news-mini-item v-for="(item, idx) in list" :key="`news-mini-item-${idx}`" :data="item" />
     </ul>
   </div>
 </template>
 
 <script>
 import { getNews } from "@/api/naver";
-import { mapState } from "vuex"
+import { mapState } from "vuex";
 import NewsMiniItem from "@/components/news/NewsMiniItem.vue";
 export default {
   components: { NewsMiniItem },
@@ -19,18 +17,23 @@ export default {
   data() {
     return {
       list: [],
-    }
+    };
   },
   computed: {
-    ...mapState("AptStore",["sido", "gugun", "dong"]),
+    ...mapState("AptStore", ["sido", "gugun", "dong", "regcode"]),
   },
   created() {
     this.getNews();
   },
+  watch: {
+    regcode() {
+      this.getNews();
+    },
+  },
   methods: {
     getNews() {
       let params = {
-        query: this.dong ? this.dong : this.gugun ? this.gugun : this.sido,
+        query: this.dong ? this.gugun + " " + this.dong : this.gugun ? this.sido + " " + this.gugun : this.sido,
         display: 3,
         start: 1,
       };
@@ -40,11 +43,11 @@ export default {
       };
       const reject = (err) => {
         console.log(err);
-      }
+      };
       getNews(params, resolve, reject);
-    }
+    },
   },
-}
+};
 </script>
 
 <style scoped>

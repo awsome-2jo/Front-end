@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import { getAptRegStats } from "@/api/apt.js";
 import IconDataBox from "../common/IconDataBox.vue";
 import LocalBlogList from "../common/LocalBlogList.vue";
 import LocalNewsList from "../common/LocalNewsList.vue";
@@ -51,7 +53,29 @@ export default {
       },
     };
   },
+  methods: {
+    setInfo() {
+      let params = { regcode: this.regcode };
+      const resolve = (res) => {
+        this.avgDeal = this.getDealString(res.data.priceAvg);
+        this.sumDeal = res.data.count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+      };
+      const reject = (err) => {
+        console.log(err);
+      };
+      getAptRegStats(params, resolve, reject);
+    },
+    getDealString(deal) {
+      let urk = Math.round(deal / 10000);
+      let marn = deal % 10000;
+      let arr = [];
+      if (urk) arr.push(`${urk}억`);
+      if (marn) arr.push(`${marn}만`);
+      return `${arr.join(" ")}원`;
+    },
+  },
   computed: {
+    ...mapState("AptStore", ["regcode"]),
     getPlaceInfo() {
       const arr = [
         { label: "유치원", value: this.place.kindergarden },
@@ -65,6 +89,15 @@ export default {
       ];
       return arr;
     },
+  },
+  watch: {
+    regcode() {
+      console.log("regcode changed");
+      this.setInfo();
+    },
+  },
+  created() {
+    this.setInfo();
   },
 };
 </script>
