@@ -5,9 +5,10 @@
 <script>
 import { getAptList, getDong, getGugun, getSido } from "@/api/apt";
 import { mapActions, mapState } from "vuex";
+import AptIcon from "@/assets/imgs/AptIcon.js";
 
 // 카카오 마커 이미지, 곧 수정할 예정
-const imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+const imageSrc = require("@/assets/imgs/AptIcon.svg");
 
 export default {
   name: "KakaoMap",
@@ -40,7 +41,7 @@ export default {
       };
       this.map = new kakao.maps.Map(this.$el, options);
       this.geocoder = new kakao.maps.services.Geocoder();
-      let imageSize = new kakao.maps.Size(24, 35);
+      let imageSize = new kakao.maps.Size(60, 60);
       this.markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
       // 지도 불러오기 성공 시 위치 default로 설정하기
       this.setLocation();
@@ -77,8 +78,6 @@ export default {
             if (level > 4) regcode = regcode.slice(0, 2);
             else if (level > 3) regcode = regcode.slice(0, 5);
             else if (level > 2) regcode = regcode.slice(0, 7);
-            console.log("level:", level);
-            console.log("regcode:", regcode);
             this.getAptMarkers(regcode);
           }
         }
@@ -160,11 +159,12 @@ export default {
       for (let apt of this.data.apt) {
         var latlng = new kakao.maps.LatLng(apt.lat, apt.lng);
         aptMarkers.push(
-          new kakao.maps.Marker({
+          new kakao.maps.CustomOverlay({
             map: this.map, // 마커를 표시할 지도
             position: latlng,
             title: apt.apartmentName,
-            image: this.markerImage, // 마커 이미지
+            // image: this.markerImage, // 마커 이미지
+            content: `<div><h1>test</h1> ${AptIcon}</div>`,
           })
         );
       }
@@ -178,10 +178,11 @@ export default {
         // 이동할 주소
         let address = $event.target.dataset.address;
         let level = $event.target.dataset.level;
-        console.log(level);
+        console.log(level, address);
 
         const callback = (result, status) => {
           if (status === kakao.maps.services.Status.OK) {
+            console.log("결과:",result[0]);
             this.map.panTo(new kakao.maps.LatLng(result[0].y, result[0].x));
             this.map.setLevel(level - 2);
             this.setCenter();
@@ -229,5 +230,13 @@ export default {
   opacity: 0.9;
   box-shadow: 1px 1px 5px var(--shadow);
   cursor: pointer;
+}
+/* svg */
+/* #map img[src$=".svg"] {
+} */
+.apt-icon-svg {
+  width: 60px;
+  height: 60px;
+  filter: drop-shadow(2px 4px 3px var(--shadow)) invert(5%) sepia(100%) saturate(200%) hue-rotate(200deg) brightness(90%) contrast(100%);
 }
 </style>
