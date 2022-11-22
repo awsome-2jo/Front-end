@@ -3,7 +3,8 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { getAptList } from "@/api/apt";
+import { mapActions, mapState } from "vuex";
 
 // 카카오 마커 이미지, 곧 수정할 예정
 const imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
@@ -16,10 +17,16 @@ export default {
       geocoder: null,
       imageSize: null,
       markerImage: null,
-      ...mapState("AptStore", ["sido", "gugun", "dong", "regcode"]),
+      markers: {
+        apt: [],
+      },
+      data: {
+        apt: [],
+      },
     };
   },
   methods: {
+    ...mapActions("AptStore", ["setMap"]),
     // 지도 삽입 메서드
     initMap() {
       let options = {
@@ -31,10 +38,9 @@ export default {
       this.geocoder = new kakao.maps.services.Geocoder();
       let imageSize = new kakao.maps.Size(24, 35);
       this.markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
       this.setLocation();
+      kakao.maps.event.addListener(this.map, "dragend", this.setCenter);
     },
-
     // 지도 이동 메서드
     setLocation() {
       var callback = (result, status) => {
@@ -43,18 +49,67 @@ export default {
           this.map.setLevel(3);
         }
       };
-      let address = [this.sido(), this.gugun(), this.dong()].filter((val) => val).join(" ");
+      let address = [this.sido, this.gugun, this.dong].filter((val) => val).join(" ");
       this.geocoder.addressSearch(address ? address : "서울특별시", callback);
+    },
+    // 중심좌표 변경 메서드
+    setCenter() {
+      let center = this.map.getCenter();
+      let callback = (result, status) => {
+        if (status === kakao.maps.services.Status.OK) {
+          let level = this.map.getLevel();
+          let regcode = result[0].code;
+          console.log(level);
+          // 확대 크기(level)에 따라 지역코드 길이 조절
+          if (level > 11) regcode = "";
+          else if (level > 8) regcode = regcode.slice(0, 2);
+          else if (level > 5) regcode = regcode.slice(0, 5);
+          else if (level > 3) regcode = regcode.slice(0, 7);
+          console.log(regcode);
+          this.getAptMarkers(regcode);
+        }
+      };
+      this.geocoder.coord2RegionCode(center.getLng(), center.getLat(), callback);
+    },
+    // 아파트 마커 표시 메서드
+    getAptMarkers(regcode) {
+      let params = { regcode: regcode, amount: 50 };
+      const resolve = (res) => {
+        console.log(res.data.length);
+        this.data.apt = res.data;
+      };
+      const reject = (err) => console.log(err);
+      getAptList(params, resolve, reject).then(this.drawMarkers);
+    },
+    // 아파트 정보 표시 메서드
+    drawMarkers() {
+      for (let marker of this.markers.apt) {
+        marker.setMap(null);
+      }
+
+      let aptMarkers = [];
+
+      for (let apt of this.data.apt) {
+        var latlng = new kakao.maps.LatLng(apt.lat, apt.lng);
+        aptMarkers.push(
+          new kakao.maps.Marker({
+            map: this.map, // 마커를 표시할 지도
+            position: latlng,
+            title: apt.apartmentName,
+            image: this.markerImage, // 마커 이미지
+          })
+        );
+      }
+
+      this.markers.apt = aptMarkers;
     },
   },
 
   computed: {
-    getRegcode() {
-      return this.regcode();
-    },
+    ...mapState("AptStore", ["mapDiv", "sido", "gugun", "dong", "regcode"]),
   },
   watch: {
-    getRegcode() {
+    regcode() {
       this.setLocation();
     },
   },
@@ -72,7 +127,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 #map {
   width: 100%;
   height: calc(100vh - 140px);

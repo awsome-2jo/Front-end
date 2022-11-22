@@ -11,10 +11,23 @@ const AptStore = {
     dongList: [],
     regcode: "",
 
+    aptCode: "",
+    target: null,
+    place: [],
+
     // TODO : add filtering state
   },
   getters: {},
   mutations: {
+    SET_TARGET(state, val) {
+      state.target = val;
+    },
+    SET_PLACE(state, val) {
+      state.place = val;
+    },
+    SET_APT_CODE(state, val) {
+      state.aptCode = val;
+    },
     SET_REGCODE(state, val) {
       state.regcode = val;
     },
@@ -44,6 +57,17 @@ const AptStore = {
     },
   },
   actions: {
+    setTarget(context, target) {
+      context.commit("SET_TARGET", target);
+    },
+    setPlace(context, target) {
+      let list = this.state.places;
+      if (target in list) context.commit("SET_PLACE", list.filter(val => val !== target));
+      else context.commit("SET_PLACE", [...list, target]);
+    },
+    setAptCode(context, aptCode) {
+      context.commit("SET_APT_CODE", aptCode);
+    },
     /************* 지역 변경 메서드 **************/
     // 광역시/도 변경 메서드
     setSido(context, data) {
