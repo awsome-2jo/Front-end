@@ -53,9 +53,9 @@ export default {
       if (this.x < 200) {
         this.x = 0;
       } else if (this.x < 600) {
-        this.x = 420;
-      } else if (this.x < 880) {
-        this.x = 840;
+        this.x = 450;
+      } else if (this.x < 1200) {
+        this.x = 900;
       } else {
         this.x = window.innerWidth;
       }
@@ -65,12 +65,15 @@ export default {
     },
   },
   computed: {
-    ...mapState("AptStore", ["regcode", "sido", "gugun", "dong"]),
+    ...mapState("AptStore", ["regcode", "sido", "gugun", "dong", "aptCode"]),
   },
   watch: {
     // x값 변경에 따라 side 컴포넌트 너비 조정
     x() {
       this.$refs.side.style.width = `${this.x}px`;
+    },
+    aptCode() {
+      if (this.aptCode) this.x = 900;
     },
   },
 };
@@ -79,7 +82,7 @@ export default {
 <style scoped>
 .component {
   z-index: 8000;
-  height: calc(100% - 138px);
+  height: calc(100% - 140px);
   position: absolute;
   right: 0;
   display: flex;
@@ -115,7 +118,7 @@ export default {
   opacity: 0.3;
 }
 .side-container {
-  width: 420px;
+  width: 450px;
   background-color: var(--white);
   border: 1px solid var(--gray);
   box-shadow: -2px 0px 10px var(--shadow);
@@ -131,8 +134,8 @@ export default {
 }
 .reg-content {
   border-right: 1px solid var(--gray);
-  max-width: 420px;
-  min-width: 420px;
+  max-width: 450px;
+  min-width: 450px;
 }
 .address-header {
   width: 100%;
@@ -142,7 +145,7 @@ export default {
   align-items: center;
   font-size: 16px;
   background-color: var(--gray);
-  white-space:nowrap;
+  white-space: nowrap;
 }
 .tap-container {
   height: 45px;

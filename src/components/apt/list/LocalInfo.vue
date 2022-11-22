@@ -9,9 +9,14 @@
     <div class="place-info-area">
       <h3>주요 시설 정보</h3>
       <div>
-        <div v-for="item, idx in getPlaceInfo" :key="`local-info-${item.label}`" class="place-info drag-block" :class="{odd: (idx+1)%2}">
-          <div>{{item.label}}</div>
-          <div>{{item.value}}곳</div>
+        <div
+          v-for="(item, idx) in getPlaceInfo"
+          :key="`local-info-${item.label}`"
+          class="place-info drag-block"
+          :class="{ odd: (idx + 1) % 2 }"
+        >
+          <div>{{ item.label }}</div>
+          <div>{{ item.value }}곳</div>
           <div class="hover-point"></div>
         </div>
       </div>
@@ -35,7 +40,7 @@ export default {
       sumDeal: "4,240",
       place: {
         kindergarden: 0,
-        hospital:0,
+        hospital: 0,
         elementarySchool: 0,
         middleSchool: 0,
         highSchool: 0,
@@ -43,20 +48,20 @@ export default {
         subway: 0,
         academy: 0,
         caulturalFacility: 0,
-      }
-    }
+      },
+    };
   },
   computed: {
     getPlaceInfo() {
       const arr = [
-        {label: "유치원", value: this.place.kindergarden},
-        {label: "병원", value: this.place.hospital},
-        {label: "초등학교", value: this.place.elementarySchool},
-        {label: "지하철역", value: this.place.subway},
-        {label: "중・고등학교", value: this.place.middleSchool + this.place.highSchool},
-        {label: "마트", value: this.place.mart},
-        {label: "학원", value: this.place.academy},
-        {label: "문화시설", value: this.place.caulturalFacility},
+        { label: "유치원", value: this.place.kindergarden },
+        { label: "병원", value: this.place.hospital },
+        { label: "초등학교", value: this.place.elementarySchool },
+        { label: "지하철역", value: this.place.subway },
+        { label: "중・고등학교", value: this.place.middleSchool + this.place.highSchool },
+        { label: "마트", value: this.place.mart },
+        { label: "학원", value: this.place.academy },
+        { label: "문화시설", value: this.place.caulturalFacility },
       ];
       return arr;
     },
@@ -68,6 +73,9 @@ export default {
 .container {
   height: calc(100% - 105px);
   overflow: scroll;
+}
+.container::-webkit-scrollbar {
+  display: none;
 }
 .icon-info-area {
   display: flex;
@@ -108,7 +116,7 @@ export default {
 .place-info.odd {
   border-right: 1px solid var(--darkgray);
 }
-.place-info .hover-point{
+.place-info .hover-point {
   position: absolute;
   width: calc(100% - 10px);
   height: calc(100% - 4px);
@@ -120,6 +128,6 @@ export default {
   cursor: pointer;
 }
 .place-info:hover .hover-point {
-  opacity: 0.05; 
+  opacity: 0.05;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" @click="onClick">
     <div class="img-container">
       <img :src="require(`@/assets/imgs/apt-${(+data.aptCode % 6) + 1}.jpg`)" />
     </div>
@@ -34,12 +34,14 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "AptItem",
   props: {
     data: Object,
   },
   methods: {
+    ...mapActions("AptStore", ["setAptCode"]),
     getDealString(deal) {
       let urk = Math.round(deal / 10000);
       let marn = deal % 10000;
@@ -47,6 +49,10 @@ export default {
       if (urk) arr.push(`${urk}억`);
       if (marn) arr.push(`${marn}만`);
       return `${arr.join(" ")}원`;
+    },
+    onClick() {
+      console.log(this.data.aptCode);
+      this.setAptCode(this.data.aptCode);
     },
   },
 };
@@ -61,6 +67,7 @@ export default {
   /* border-bottom: 1px solid var(--gray); */
   display: flex;
   position: relative;
+  overflow: hidden;
 }
 .container:hover::after {
   content: "";
@@ -79,8 +86,12 @@ export default {
   margin: 0;
 }
 .name {
+  width: 240px;
   font-size: 18px;
   margin-bottom: 4px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .dong {
   font-size: 12px;

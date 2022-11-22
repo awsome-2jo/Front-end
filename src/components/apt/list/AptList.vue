@@ -28,31 +28,31 @@ export default {
     return {
       list: [],
       loading: false,
-      ...mapState("AptStore", ["regcode"]),
     };
   },
   methods: {
     /******** 지역코드에 따른 데이터 출력 함수 ********/
     async getList() {
       this.loading = true;
-      let params = {regcode: this.regcode(), amount: 20};
-      
-      const callback = (res) => {this.list = res.data};
-      const error = (error) => {console.log(error)};
+      let params = { regcode: this.regcode, amount: 20 };
+
+      const callback = (res) => {
+        this.list = res.data;
+      };
+      const error = (error) => {
+        console.log(error);
+      };
 
       getAptList(params, callback, error);
       this.loading = false;
     },
   },
 
-  // 주소 변경 감지용 computed & watch
   computed: {
-    getRegcode() {
-      return this.regcode();
-    },
+    ...mapState("AptStore", ["regcode"]),
   },
   watch: {
-    getRegcode() {
+    regcode() {
       this.getList();
     },
   },
@@ -67,10 +67,10 @@ ul {
   margin: 15px;
   box-sizing: border-box;
   width: auto;
-  height: 100%;
+  height: calc(100% - 120px);
   padding: 0;
   /* background-color: var(--red); */
-  overflow-y: auto;
+  overflow: scroll;
 }
 ul > li {
   list-style: none;
