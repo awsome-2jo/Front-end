@@ -13,31 +13,35 @@
       </div>
 
       <div v-if="userInfo" class="nav-user member">
-        <span class="user-name"><b>{{ userInfo.name }}</b>님</span>
+        <span class="user-name"
+          ><b>{{ userInfo.name }}</b
+          >님</span
+        >
         <font-awesome-icon icon="fa-regular fa-user" class="profile" />
-        
+
         <round-button text="로그아웃" @event="logout"></round-button>
       </div>
       <div v-else class="nav-user non-member">
-        <round-button text="회원가입" type="line" @event="move"></round-button>
+        <round-button text="회원가입" type="line" @event="setRegisterModal(true)"></round-button>
         <round-button text="로그인" @event="setLoginModal(true)"></round-button>
       </div>
     </nav>
-
+    <register-modal />
     <login-modal />
   </header>
 </template>
 
 <script>
 import RoundButton from "@/components/common/RoundButton";
+import RegisterModal from "@/components/user/RegisterModal";
 import LoginModal from "@/components/user/LoginModal";
 import { mapState, mapActions } from "vuex";
 
 export default {
   name: "TopNav",
-  components: { RoundButton, LoginModal },
+  components: { RoundButton, RegisterModal, LoginModal },
   methods: {
-    ...mapActions("UserStore", ["setLoginModal", "logout"]),
+    ...mapActions("UserStore", ["setRegisterModal", "setLoginModal", "logout"]),
     move() {
       console.log("move");
     },
@@ -119,7 +123,7 @@ header {
 }
 .profile {
   background-color: var(--gray);
-  padding:8px;
+  padding: 8px;
   font-size: 13px;
   color: var(--darkgray);
   border-radius: 50%;

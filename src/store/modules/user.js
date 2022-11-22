@@ -1,13 +1,17 @@
-import { getUserInfo, login } from "@/api/user";
+import { getUserInfo, login, regist } from "@/api/user";
 
 const UserStore = {
   namespaced: true,
   state: {
     userInfo: null,
+    registerModal: false,
     loginModal: false,
   },
   getters: {},
   mutations: {
+    SET_REGISTER_MODAL(state, bool) {
+      state.registerModal = bool;
+    },
     SET_LOGIN_MODAL(state, bool) {
       state.loginModal = bool;
     },
@@ -19,8 +23,28 @@ const UserStore = {
     },
   },
   actions: {
+    setRegisterModal(context, bool) {
+      context.commit("SET_REGISTER_MODAL", bool);
+    },
     setLoginModal(context, bool) {
       context.commit("SET_LOGIN_MODAL", bool);
+    },
+    async register(context, user) {
+      const callback = (res) => {
+        if (res.status == 200) {
+          alert("회원가입이 완료되었습니다! 이메일을 확인해주세요");
+          context.commit("SET_REGISTER_MODAL", false);
+        } else {
+          alert("회원가입에 실패하였습니다! 1");
+        }
+      };
+
+      const fail = (res) => {
+        console.log(res);
+        alert("회원가입에 실패하였습니다! 2");
+      };
+
+      regist(user, callback, fail);
     },
     async login(context, user) {
       // TODO: 요청 전 input validation check 필요
@@ -35,6 +59,10 @@ const UserStore = {
         // 로그인 실패: 잘못된 아이디
         else if (res.status == 204) {
           alert("아이디와 비밀번호를 확인해주세요!");
+        }
+        // 이메일 인증 미진행 시
+        else if (res.status == 205) {
+          alert("이메일 인증을 해주세요!");
         }
         // 로그인 실패: 잘못된 요청
         else if (res.status >= 400) {
