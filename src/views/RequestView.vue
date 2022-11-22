@@ -8,7 +8,7 @@ export default {
   created() {
     console.log(this.$route.params.data);
     const resolve = () => {
-      alert("인증되었습니다!");
+      alert("인증되었습니다!")
       this.$router.push("/");
     }
     const reject = () => {

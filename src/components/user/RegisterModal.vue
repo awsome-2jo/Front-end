@@ -11,7 +11,6 @@
         <text-input icon="user" placeholder="나이" :value="age" type="number" @on-change="setAge" />
         <text-input icon="user" placeholder="폰번호" :value="phone" @on-change="setPhone" />
         <text-input icon="user" placeholder="선호 사항 1" :value="preferOrder1" @on-change="setPreferOrder1" />
-        <select-box :select="sido" :options="sidoList" default="선호 사항 1" @on-change="setSido" />
         <text-input icon="user" placeholder="선호 사항 2" :value="preferOrder2" @on-change="setPreferOrder2" />
       </div>
       <button class="register-btn" @click.prevent="onregister">회원가입</button>
