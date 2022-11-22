@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView";
 import AptView from "../views/AptView";
 import NoticeView from "../views/NoticeView";
 import NewsView from "../views/NewsView";
+import RequestView from "../views/RequestView";
 
 Vue.use(VueRouter);
 
@@ -12,6 +13,14 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+    meta: {
+      title: "HOME:IN - 아파트 실거래가 정보 사이트",
+    },
+  },
+  {
+    path: "/confirm/:data",
+    name: "confirm",
+    component: RequestView,
     meta: {
       title: "HOME:IN - 아파트 실거래가 정보 사이트",
     },
