@@ -2,37 +2,46 @@
   <div class="container" @click="close" v-show="registerModal">
     <form class="register-form">
       <h2>HOME:IN</h2>
-      <checkbox-button class="test" :value="remember" text="아이디 저장" position="left" @event="setRemember" />
       <div class="input-container">
         <text-input icon="user" placeholder="아이디" :value="id" @on-change="setId" />
         <text-input icon="password" placeholder="비밀번호" type="password" :value="pass" @on-change="setPass" />
-        <text-input icon="user" placeholder="아이디" :value="id" @on-change="setId" />
-        <text-input icon="user" placeholder="아이디" :value="id" @on-change="setId" />
-        <text-input icon="user" placeholder="아이디" :value="id" @on-change="setId" />
+        <text-input icon="user" placeholder="이름" :value="name" @on-change="setName" />
+        <text-input icon="user" placeholder="이메일" :value="email" type="email" @on-change="setEmail" />
+        <text-input icon="user" placeholder="성별" :value="gender" @on-change="setGender" />
+        <text-input icon="user" placeholder="나이" :value="age" type="number" @on-change="setAge" />
+        <text-input icon="user" placeholder="폰번호" :value="phone" @on-change="setPhone" />
+        <text-input icon="user" placeholder="선호 사항 1" :value="preferOrder1" @on-change="setPreferOrder1" />
+        <select-box :select="sido" :options="sidoList" default="선호 사항 1" @on-change="setSido" />
+        <text-input icon="user" placeholder="선호 사항 2" :value="preferOrder2" @on-change="setPreferOrder2" />
       </div>
-      <a class="forget-password-a">비밀번호를 잊어버리셨나요?</a>
-      <button class="register-btn" @click.prevent="onregister">register</button>
+      <button class="register-btn" @click.prevent="onregister">회원가입</button>
     </form>
   </div>
 </template>
 
 <script>
-import CheckboxButton from "../common/CheckboxButton.vue";
 import TextInput from "../common/TextInput.vue";
 import { mapActions, mapState } from "vuex";
 
 export default {
-  components: { TextInput, CheckboxButton },
+  components: { TextInput },
   name: "RegisterModal",
   data() {
     return {
       id: "",
       pass: "",
+      name: "",
+      email: "",
+      gender: "",
+      age: "",
+      phone: "",
+      preferOrder1: "",
+      preferOrder2: "",
       remember: true,
     };
   },
   methods: {
-    ...mapActions("UserStore", ["register", "setregisterModal"]),
+    ...mapActions("UserStore", ["register", "setRegisterModal"]),
     setRemember() {
       this.remember = !this.remember;
     },
@@ -42,14 +51,45 @@ export default {
     setPass(pass) {
       this.pass = pass;
     },
+    setName(name) {
+      this.name = name;
+    },
+    setEmail(email) {
+      this.email = email;
+    },
+    setGender(gender) {
+      this.gender = gender;
+    },
+    setAge(age) {
+      this.age = age;
+    },
+    setPhone(phone) {
+      this.phone = phone;
+    },
+    setPreferOrder1(preferOrder1) {
+      this.preferOrder1 = preferOrder1;
+    },
+    setPreferOrder2(preferOrder2) {
+      this.preferOrder2 = preferOrder2;
+    },
     async onregister() {
-      await this.register({ id: this.id, pass: this.pass });
+      await this.register({
+        id: this.id,
+        pass: this.pass,
+        name: this.name,
+        email: this.email,
+        gender: this.gender,
+        age: this.age,
+        phone: this.phone,
+        preferOrder1: this.preferOrder1,
+        preferOrder2: this.preferOrder2,
+      });
       if (this.userInfo) {
-        this.setregisterModal();
+        this.setRegisterModal();
       }
     },
     close($event) {
-      if ($event.currentTarget === $event.target) this.setregisterModal();
+      if ($event.currentTarget === $event.target) this.setRegisterModal();
       else $event.stopPropagation();
     },
   },
@@ -77,7 +117,7 @@ export default {
 }
 .register-form {
   width: 400px;
-  height: 340px;
+  height: 700px;
   border-radius: 10px;
   background-color: var(--white);
   box-shadow: 4px 4px 5px var(--shadow);
@@ -92,6 +132,9 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.input-container > * {
+  margin: 10px;
 }
 h2 {
   width: 100%;

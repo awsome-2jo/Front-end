@@ -60,6 +60,10 @@ const UserStore = {
         else if (res.status == 204) {
           alert("아이디와 비밀번호를 확인해주세요!");
         }
+        // 이메일 인증 미진행 시
+        else if (res.status == 205) {
+          alert("이메일 인증을 해주세요!");
+        }
         // 로그인 실패: 잘못된 요청
         else if (res.status >= 400) {
           alert("잘못된 요청입니다!");
