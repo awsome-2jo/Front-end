@@ -2,7 +2,7 @@
   <div @click="movePage" class="news-item">
     <div class="container">
       <div class="img-container">
-        <img :src="data.image" :alt="data.title" />
+        <img :src="image" referrerpolicy="no-referrer" :alt="data.title" @error="replaceByDefault" />
       </div>
       <div class="text-container">
         <h3 v-html="data.title"></h3>
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import defaultImg from "@/assets/imgs/default-news.png";
 export default {
   name: "NewsItem",
   props: {
@@ -23,12 +24,29 @@ export default {
       image: "",
     };
   },
+  watch: {
+    data() {
+      this.setImg();
+    },
+  },
   methods: {
     movePage() {
       window.location = this.data.originallink;
     },
+    replaceByDefault() {
+      this.image = defaultImg;
+    },
+    setImg() {
+      this.image = this.data.image;
+      if (!this.image.match(/(http(s)?:\/\/)([a-z0-9\w]+\.*)+[a-z0-9]{2,4}/gi)) {
+        let root = this.data.originallink.match(/(http(s)?:\/\/)([a-z0-9\w]+\.*)+[a-z0-9]{2,4}/gi)[0];
+        this.image = root + this.image;
+      }
+    },
   },
-  created() {},
+  created() {
+    this.setImg();
+  },
 };
 </script>
 
@@ -58,6 +76,7 @@ export default {
   height: 160px;
   overflow: hidden;
   position: relative;
+  background-color: var(--gray);
 }
 .news-item .img-container > img {
   height: 100%;
