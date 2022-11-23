@@ -18,6 +18,7 @@ export default {
       geocoder: null,
       imageSize: null,
       markerImage: null,
+      lastAddress: "", // 지도 깜빡이 방지용 변수. 이전에 적용한 주소값 저장
       markers: {
         apt: [],
         reg: [],
@@ -100,27 +101,25 @@ export default {
 
     // 지역 마커 그리기
     drawRegMarkers(data, level) {
-      this.resetMarkers();
       let regcode = data.code;
-      let address = [];
+      let address = "";
 
+      const drawMarker = (result, status, item) => {
+        if (status === kakao.maps.services.Status.OK) {
+          let latlng = new kakao.maps.LatLng(result[0].y, result[0].x);
+          let regMarker = new kakao.maps.CustomOverlay({
+            map: this.map, // 마커를 표시할 지도
+            position: latlng,
+            title: item.name,
+            // image: this.markerImage, // 마커 이미지
+            content: `<div class="map-reg-marker" data-address="${result[0].address.address_name}" data-level="${level}">${item.name}</div>`,
+          });
+          this.markers.reg.push(regMarker);
+        }
+      };
       const resolve = (res) => {
-        const callback = (result, status, item) => {
-          if (status === kakao.maps.services.Status.OK) {
-            let latlng = new kakao.maps.LatLng(result[0].y, result[0].x);
-            let regMarker = new kakao.maps.CustomOverlay({
-              map: this.map, // 마커를 표시할 지도
-              position: latlng,
-              title: item.name,
-              // image: this.markerImage, // 마커 이미지
-              content: `<div class="map-reg-marker" data-address="${result[0].address.address_name}" data-level="${level}">${item.name}</div>`,
-            });
-            this.markers.reg.push(regMarker);
-          }
-        };
-
         for (let item of res.data) {
-          this.geocoder.addressSearch([...address, item.name].join(" "), (res, stats) => callback(res, stats, item));
+          this.geocoder.addressSearch(address + " " + item.name, (res, stats) => drawMarker(res, stats, item));
         }
         this.data.reg = res.data;
       };
@@ -130,27 +129,36 @@ export default {
 
       if (level < 7) {
         regcode = regcode.slice(0, 5);
-        address = [data.region_1depth_name, data.region_2depth_name];
+        address = data.region_1depth_name + " " + data.region_2depth_name;
+        if (address === this.lastAddress) return;
+        this.lastAddress = address;
+        this.resetMarkers();
         getDong(regcode, resolve, reject);
       } else if (level < 11) {
         regcode = regcode.slice(0, 2);
-        address = [data.region_1depth_name];
+        address = data.region_1depth_name;
+        if (address === this.lastAddress) return;
+        this.lastAddress = address;
+        this.resetMarkers();
         getGugun(regcode, resolve, reject);
       } else {
+        if (address === this.lastAddress) return;
+        this.lastAddress = address;
+        this.resetMarkers();
         getSido(resolve, reject);
       }
+      console.log("done", this.lastAddress);
     },
 
     // 아파트 마커 정보 추출 메서드
     getAptMarkers(regcode) {
       let params = { regcode: regcode, amount: 50 };
       const resolve = (res) => {
-        res.data.sort((a, b)=> {
-          if(a.lat===b.lat) return a.lng - b.lng;
+        res.data.sort((a, b) => {
+          if (a.lat === b.lat) return a.lng - b.lng;
           return b.lat - a.lat;
         });
         this.data.apt = res.data;
-
       };
       const reject = (err) => console.log(err);
       getAptList(params, resolve, reject).then(this.drawAptMarkers);
@@ -193,10 +201,10 @@ export default {
 
         const callback = (result, status) => {
           if (status === kakao.maps.services.Status.OK) {
-            console.log("결과:",result[0]);
-            this.map.setLevel(level-2);
+            console.log("결과:", result[0]);
+            this.map.setLevel(level - 2);
             this.map.panTo(new kakao.maps.LatLng(result[0].y, result[0].x));
-            
+
             // this.setCenter();
           }
         };
@@ -262,7 +270,6 @@ export default {
 .apt-marker:hover {
   z-index: 2;
   transform: scale(105%);
-  
 }
 .apt-marker > .apt-marker-info {
   background: var(--navy);
@@ -289,7 +296,7 @@ export default {
   font-size: 6px;
   text-align: center;
 } */
-.apt-marker > .apt-marker-info{
+.apt-marker > .apt-marker-info {
   font-size: 1px;
 }
 .apt-marker > .apt-marker-info .min-deal {
