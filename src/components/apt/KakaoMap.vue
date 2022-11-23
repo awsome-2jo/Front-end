@@ -33,6 +33,7 @@ export default {
     ...mapActions("AptStore", ["setMap", "setTarget", "setSideX"]),
     // 지도 삽입 메서드
     initMap() {
+      console.log("kakao map init");
       this.$el.addEventListener("click", this.zumInReg);
       this.$el.addEventListener("click", this.onClickApt);
 
@@ -248,7 +249,8 @@ export default {
   },
   mounted() {
     /* global kakao */
-    kakao.maps.load(this.initMap);
+    // kakao.maps.load(this.initMap);
+    this.initMap();
   },
 };
 </script>

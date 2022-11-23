@@ -134,6 +134,7 @@ export default {
   overflow: hidden;
 }
 .content {
+  position: relative;
   display: flex;
   height: 100%;
   margin-top: -2px;
@@ -145,6 +146,8 @@ export default {
   min-width: 450px;
 }
 .address-header {
+  position: relative;
+  z-index: 1000;
   width: 100%;
   height: 60px;
   display: flex;

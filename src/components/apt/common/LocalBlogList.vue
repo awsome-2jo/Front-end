@@ -1,6 +1,6 @@
 <template>
   <div class="topic-container">
-    <h2>지역 부동산 블로그<a href="#">더보기 ></a></h2>
+    <h2>지역 부동산 블로그</h2>
     <ul>
       <news-mini-item v-for="(item, idx) in list" :key="`news-mini-item-${idx}`" :data="item" />
     </ul>
