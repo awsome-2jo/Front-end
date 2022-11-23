@@ -50,7 +50,7 @@ import { getDealString } from "@/api/utils.js";
 import { getAptDetail } from "@/api/apt";
 import { mapState } from "vuex";
 import IconDataBox from "../common/IconDataBox.vue";
-import AptChart from "@/components/apt/common/AptChart.vue";
+import AptChart from "@/components/apt/common/AptChart";
 
 /* global kakao */
 export default {
