@@ -30,10 +30,11 @@ export default {
     };
   },
   methods: {
-    ...mapActions("AptStore", ["setMap"]),
+    ...mapActions("AptStore", ["setMap", "setTarget", "setSideX"]),
     // 지도 삽입 메서드
     initMap() {
       this.$el.addEventListener("click", this.zumInReg);
+      this.$el.addEventListener("click", this.onClickApt);
 
       let options = {
         //지도를 생성할 때 필요한 기본 옵션
@@ -47,7 +48,6 @@ export default {
       // 지도 불러오기 성공 시 위치 default로 설정하기
       this.setLocation();
       // 지도 이동 이벤트 추가
-      // kakao.maps.event.addListener(this.map, "dragend", this.setCenter);
       kakao.maps.event.addListener(this.map, "bounds_changed", this.setCenter);
     },
 
@@ -153,16 +153,14 @@ export default {
         getSido(resolve, reject);
       }
     },
-
     // 아파트 마커 정보 추출 메서드
     getAptMarkers(regcode) {
       let params = { regcode: regcode, amount: 50 };
       const resolve = (res) => {
-        res.data.sort((a, b) => {
+        this.data.apt = [...res.data].sort((a, b) => {
           if (a.lat === b.lat) return a.lng - b.lng;
           return b.lat - a.lat;
         });
-        this.data.apt = res.data;
       };
       const reject = (err) => console.log(err);
       getAptList(params, resolve, reject).then(this.drawAptMarkers);
@@ -175,13 +173,14 @@ export default {
       let aptMarkers = [];
       for (let apt of this.data.apt) {
         let latlng = new kakao.maps.LatLng(apt.lat, apt.lng);
+
         aptMarkers.push(
           new kakao.maps.CustomOverlay({
             map: this.map, // 마커를 표시할 지도
             position: latlng,
             title: apt.apartmentName,
             content: `
-            <div class="apt-marker" data-aptcode="${apt.aptCode}">
+            <div class="apt-marker" data-x="${apt.lng}" data-y="${apt.lat}" data-aptcode="${apt.aptCode}">
               <div class="apt-marker-info">
                 <div class="min-deal">${this.getDealString(apt.minDealAmount)}</div>
                 <div class="max-deal">~${this.getDealString(apt.maxDealAmount)}</div>
@@ -191,7 +190,6 @@ export default {
           })
         );
       }
-
       this.markers.apt = aptMarkers;
     },
     // 지역 마커 클릭 이벤트
@@ -210,6 +208,21 @@ export default {
         this.geocoder.addressSearch(address, callback);
       }
     },
+    // 아파트 매물 클릭 이벤트
+    onClickApt($event) {
+      let target = $event.target;
+      while (target !== this.$el) {
+        if (target.className === "apt-marker") {
+          let { x, y, aptcode } = target.dataset;
+          this.map.panTo(new kakao.maps.LatLng(+y, +x));
+          let latlng = new kakao.maps.LatLng(+y, +x);
+          let apttarget = { aptCode: aptcode, latlng };
+          this.setTarget(apttarget);
+          break;
+        } else target = target.parentNode;
+      }
+    },
+    // 가격 문자열 반환
     getDealString(deal) {
       let urk = Math.round(deal / 10000);
       let marn = deal % 10000;
@@ -221,23 +234,21 @@ export default {
   },
 
   computed: {
-    ...mapState("AptStore", ["mapDiv", "sido", "gugun", "dong", "regcode"]),
+    ...mapState("AptStore", ["mapDiv", "sido", "gugun", "dong", "regcode", "sideX"]),
   },
   watch: {
     regcode() {
       this.setLocation();
     },
+    sideX() {
+      console.log(this.sideX);
+      this.$el.style.width = `calc(100% - ${this.sideX}px)`;
+      this.map?.relayout();
+    },
   },
   mounted() {
-    // Kakao map API 등록하기
-    const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAO_KEY}&libraries=services`;
-    document.head.appendChild(script);
-
     /* global kakao */
-    script.addEventListener("load", () => {
-      kakao.maps.load(this.initMap);
-    });
+    kakao.maps.load(this.initMap);
   },
 };
 </script>
@@ -287,8 +298,6 @@ export default {
   border-left: 5px solid transparent;
   border-top: 10px solid var(--navy);
   border-right: 5px solid transparent;
-}
-#map img {
 }
 /* .apt-marker > .apt-marker-info h4 {
   margin: 0;

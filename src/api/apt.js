@@ -39,7 +39,7 @@ async function getAptRegStats(param, success, fail) {
  * @param {Function} fail 실패시 실행할 함수
  */
 async function getAptDetail(aptCode, success, fail) {
-  await api.get(`/apt/list/detail/${aptCode}`).then(success).catch(fail);
+  await api.get(`/apt/detail/${aptCode}`).then(success).catch(fail);
 }
 
 /**

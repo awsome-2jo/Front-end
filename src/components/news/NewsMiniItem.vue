@@ -5,8 +5,8 @@
         <img :src="image" referrerpolicy="no-referrer" :alt="data.title" @error="replaceByDefault" />
       </div>
       <div class="text-container">
-        <h3 v-html="data.title"></h3>
-        <span v-html="data.description"></span>
+        <h3 v-html="data.title.trim()"></h3>
+        <span v-html="data.description.trim()"></span>
       </div>
     </div>
   </li>

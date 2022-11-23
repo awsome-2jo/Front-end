@@ -29,6 +29,16 @@ const routes = [
     path: "/apt",
     name: "aptMap",
     component: AptView,
+    beforeEnter: (to, from, next) => {
+      const script = document.createElement("script");
+      script.id = "kakao";
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAO_KEY}&libraries=services`;
+      document.head.appendChild(script);
+
+      script.addEventListener("load", () => {
+        next();
+      });
+    },
     meta: {
       title: "HOME:IN - 실거래 정보",
     },

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="topic-container">
     <h2>지역 부동산 블로그<a href="#">더보기 ></a></h2>
     <ul>
       <news-mini-item v-for="(item, idx) in list" :key="`news-mini-item-${idx}`" :data="item" />
@@ -51,11 +51,11 @@ export default {
 </script>
 
 <style scoped>
-.container {
+.topic-container {
   height: auto;
   margin: 10px 20px;
 }
-.container > h2 {
+.topic-container > h2 {
   background-color: var(--navy);
   margin-top: 25px;
   padding: 15px;
@@ -63,7 +63,7 @@ export default {
   color: var(--white);
   position: relative;
 }
-.container > h2 > a {
+.topic-container > h2 > a {
   display: block;
   position: absolute;
   top: 50%;
@@ -74,12 +74,12 @@ export default {
   font-weight: 400;
   color: var(--white);
 }
-.container > ul {
+.topic-container > ul {
   margin: 0;
   padding: 0;
   width: 100%;
 }
-.container > ul > li {
+.topic-container > ul > li {
   margin: 0;
   list-style-type: none;
   width: 100%;
