@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import AptList from "@/components/apt/list/AptList.vue";
 import LocalInfo from "@/components/apt/list/LocalInfo.vue";
 import AptDetail from "./detail/AptDetail.vue";
@@ -37,6 +37,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions("AptStore", ["setSideX"]),
     /************* 모드 선택 이벤트 **************/
     setMode(mode) {
       this.mode = mode;
@@ -45,6 +46,7 @@ export default {
     mouseDownHandler() {
       window.addEventListener("mousemove", this.mouseMoveHandler);
       window.addEventListener("mouseup", this.mouseUpHandler);
+      this.setSideX(0);
     },
     mouseUpHandler() {
       window.removeEventListener("mousemove", this.mouseMoveHandler);
@@ -55,17 +57,18 @@ export default {
       } else if (this.x < 600) {
         this.x = 450;
       } else if (this.x < 1200) {
-        this.x = 900;
+        this.x = 1000;
       } else {
         this.x = window.innerWidth;
       }
+      this.setSideX(this.x);
     },
     mouseMoveHandler($event) {
       this.x = window.innerWidth - $event.x - 15;
     },
   },
   computed: {
-    ...mapState("AptStore", ["regcode", "sido", "gugun", "dong", "aptCode"]),
+    ...mapState("AptStore", ["regcode", "sido", "gugun", "dong", "aptCode", "sideX"]),
   },
   watch: {
     // x값 변경에 따라 side 컴포넌트 너비 조정
@@ -75,6 +78,10 @@ export default {
     aptCode() {
       if (this.aptCode) this.x = 900;
     },
+  },
+  mounted() {
+    this.x = 450;
+    this.setSideX(this.x);
   },
 };
 </script>
@@ -118,7 +125,7 @@ export default {
   opacity: 0.3;
 }
 .side-container {
-  width: 450px;
+  width: 0;
   background-color: var(--white);
   border: 1px solid var(--gray);
   box-shadow: -2px 0px 10px var(--shadow);
