@@ -47,8 +47,8 @@ export default {
       // 지도 불러오기 성공 시 위치 default로 설정하기
       this.setLocation();
       // 지도 이동 이벤트 추가
-      kakao.maps.event.addListener(this.map, "dragend", this.setCenter);
-      kakao.maps.event.addListener(this.map, "zoom_changed", this.setCenter);
+      // kakao.maps.event.addListener(this.map, "dragend", this.setCenter);
+      kakao.maps.event.addListener(this.map, "bounds_changed", this.setCenter);
     },
 
     // 지도 이동 메서드
@@ -65,22 +65,27 @@ export default {
       this.geocoder.addressSearch(address ? address : "서울특별시", callback);
     },
 
+    // 마커 그리기 이벤트
+    setMarkers(result, level) {
+      let regcode = result[0].code;
+
+      // 확대 크기(level)에 따라 지역코드 길이 조절
+      if (level >= 5) this.drawRegMarkers(result[0], level);
+      else {
+        if (level > 4) regcode = regcode.slice(0, 2);
+        else if (level > 3) regcode = regcode.slice(0, 5);
+        else if (level > 2) regcode = regcode.slice(0, 7);
+        this.getAptMarkers(regcode);
+      }
+    },
+
     // 중심좌표 변경 메서드
     setCenter() {
       let center = this.map.getCenter();
-      let callback = (result, status) => {
+      const callback = (result, status) => {
         if (status === kakao.maps.services.Status.OK) {
           let level = this.map.getLevel();
-          let regcode = result[0].code;
-
-          // 확대 크기(level)에 따라 지역코드 길이 조절
-          if (level >= 5) this.drawRegMarkers(result[0], level);
-          else {
-            if (level > 4) regcode = regcode.slice(0, 2);
-            else if (level > 3) regcode = regcode.slice(0, 5);
-            else if (level > 2) regcode = regcode.slice(0, 7);
-            this.getAptMarkers(regcode);
-          }
+          this.setMarkers(result, level);
         }
       };
       this.geocoder.coord2RegionCode(center.getLng(), center.getLat(), callback);
@@ -112,7 +117,7 @@ export default {
             position: latlng,
             title: item.name,
             // image: this.markerImage, // 마커 이미지
-            content: `<div class="map-reg-marker" data-address="${result[0].address.address_name}" data-level="${level}">${item.name}</div>`,
+            content: `<div class="map-reg-marker" data-address="${result[0].address.address_name}">${item.name}</div>`,
           });
           this.markers.reg.push(regMarker);
         }
@@ -147,7 +152,6 @@ export default {
         this.resetMarkers();
         getSido(resolve, reject);
       }
-      console.log("done", this.lastAddress);
     },
 
     // 아파트 마커 정보 추출 메서드
@@ -196,16 +200,11 @@ export default {
       if ($event.target.className === "map-reg-marker") {
         // 이동할 주소
         let address = $event.target.dataset.address;
-        let level = $event.target.dataset.level;
-        console.log(level, address);
 
-        const callback = (result, status) => {
+        const callback = async (result, status) => {
           if (status === kakao.maps.services.Status.OK) {
-            console.log("결과:", result[0]);
-            this.map.setLevel(level - 2);
+            this.map.setLevel(this.map.getLevel() - 2);
             this.map.panTo(new kakao.maps.LatLng(result[0].y, result[0].x));
-
-            // this.setCenter();
           }
         };
         this.geocoder.addressSearch(address, callback);
