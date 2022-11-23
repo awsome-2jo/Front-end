@@ -113,6 +113,15 @@ async function modifyUser(body, success, fail) {
   api.defaults.headers["access-token"] = sessionStorage.getItem("access-token");
   await api.put(`/user/modify`, body).then(success).catch(fail);
 }
+/**
+ * GET: 이메일 인증
+ * @param {String} data 인증 문자
+ * @param {Function} success 성공시 실행할 함수
+ * @param {Function} fail 실패시 실행할 함수
+ */
+async function userConfirm(data, success, fail) {
+  await api.get(`/user/certify/${data}`).then(success).catch(fail);
+}
 
 export {
   regist,
@@ -126,4 +135,5 @@ export {
   withdraw,
   userList,
   modifyUser,
+  userConfirm,
 };

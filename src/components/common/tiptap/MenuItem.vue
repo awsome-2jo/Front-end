@@ -62,7 +62,7 @@ export default {
   fill: currentColor;
 }
 .menu-item.is-active, .menu-item:hover {
-  color: #FFF;
+  color: var(--white);
     background-color: var(--navy);
 }
 </style>
