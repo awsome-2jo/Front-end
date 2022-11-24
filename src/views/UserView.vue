@@ -57,7 +57,7 @@
           <div>
             <font-awesome-icon icon="fa-solid fa-hashtag" class="icon" />
             <label>나이</label>
-            <input type="number" v-model="user.age" placeholder="-" :disabled="defaultMode">
+            <input type="number" min="1" v-model="user.age" placeholder="-" :disabled="defaultMode">
           </div>
         </div>
 
@@ -88,7 +88,7 @@ export default {
         name: "",
         age: 0,
         gender: 0,
-      }
+      },
     }
   },
   methods: {
@@ -107,7 +107,7 @@ export default {
       }
       let body = {};
       body.gender = 0; // 성별의 경우 0도 값이므로 추가
-      body.age = 0;
+      
       for(let item in this.user) {
         if(this.user[item]) body[item] = this.user[item];
       }
@@ -155,10 +155,8 @@ export default {
   },
   watch: {
     userInfo() {
-      if(this.userInfo) {
-        this.logout();
-        this.$router.push('/');
-      }
+      if(this.userInfo) this.logout();
+      this.$router.push('/');
     },
     mode() {
       this.initUserData();
