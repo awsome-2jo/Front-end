@@ -7,7 +7,14 @@
         <text-input icon="password" placeholder="비밀번호" type="password" :value="pass" @on-change="setPass" />
         <text-input icon="name" placeholder="이름" :value="name" @on-change="setName" />
         <text-input icon="mail" placeholder="이메일" :value="email" type="email" @on-change="setEmail" />
-        <text-input icon="gender" placeholder="성별" :value="gender" @on-change="setGender" />
+        <div class="gender-input">
+          <font-awesome-icon icon="fa-solid fa-venus-mars"/>
+          <input type="radio" v-model="gender" value="0">
+          <font-awesome-icon icon="fa-solid fa-mars" />
+          <input type="radio" v-model="gender" value="1">
+          <font-awesome-icon icon="fa-solid fa-venus" />
+          <input type="radio" v-model="gender" value="2">
+        </div>
         <text-input icon="num" placeholder="나이" :value="age" type="number" @on-change="setAge" />
         <text-input icon="phone" placeholder="폰번호" :value="phone" @on-change="setPhone" />
       </div>
@@ -26,13 +33,13 @@ export default {
   data() {
     return {
       id: "",
+      idCheck: true,
       pass: "",
       name: "",
       email: "",
-      gender: "",
+      gender: 0,
       age: "",
       phone: "",
-      remember: true,
     };
   },
   methods: {
@@ -102,9 +109,19 @@ export default {
   background-color: var(--shadow);
   animation: fade-in 0.5s linear;
 }
+.gender-input {
+  display: flex;
+  color: var(--navy);
+  justify-content: center;
+  font-size: 24px;
+}
+.gender-input > input {
+  margin-right: 20px;
+}
 .register-form {
   width: 400px;
-  height: 700px;
+  height: fit-content;
+  padding-bottom: 80px;
   border-radius: 10px;
   background-color: var(--white);
   box-shadow: 4px 4px 5px var(--shadow);
@@ -115,7 +132,6 @@ export default {
   animation: toast-up 0.5s ease-out;
 }
 .input-container {
-  height: 100px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
