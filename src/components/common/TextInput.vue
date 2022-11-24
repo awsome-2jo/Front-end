@@ -1,8 +1,6 @@
 <template>
   <div class="text-input-compont">
-    <font-awesome-icon v-if="icon === `search`" icon="fa-solid fa-magnifying-glass" class="awsome-icon" />
-    <font-awesome-icon v-else-if="icon === `user`" icon="fa-solid fa-user" class="awsome-icon" />
-    <font-awesome-icon v-else-if="icon === `password`" icon="fa-solid fa-key" class="awsome-icon" />
+    <font-awesome-icon :icon="`fa-solid ${iconMap[icon]}`" class="awsome-icon" />
     <input :type="type" :value="value" @input="onChange" :placeholder="placeholder" />
   </div>
 </template>
@@ -22,8 +20,22 @@ export default {
     },
     icon: {
       type: String,
-      default: "",
+      default: "search",
     },
+  },
+  data() {
+    return {
+      iconMap: {
+        search: "fa-magnifying-glass",
+        user: "fa-user",
+        password: "fa-key",
+        mail: "fa-envelope",
+        name: "fa-signature",
+        gender: "fa-venus-mars",
+        num: "fa-hashtag",
+        phone: "fa-phone",
+      },
+    }
   },
   methods: {
     onChange() {

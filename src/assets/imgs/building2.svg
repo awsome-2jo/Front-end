@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with Vectornator (http://vectornator.io/) -->
+<svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 1280 500" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<filter color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="500.925" id="Filter" width="534.244" x="1522.91" y="188.156">
+<feDropShadow dx="-4.37114e-07" dy="-10" flood-color="#000000" flood-opacity="0.327296" in="SourceGraphic" result="Shadow" stdDeviation="15"/>
+</filter>
+<filter color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="148.219" id="Filter_2" width="84.9062" x="898.969" y="121.531">
+<feDropShadow dx="-4.37114e-07" dy="-10" flood-color="#000000" flood-opacity="0.327296" in="SourceGraphic" result="Shadow" stdDeviation="15"/>
+</filter>
+<filter color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="658.75" id="Filter_3" width="1563.22" x="-30" y="55.7188">
+<feDropShadow dx="-4.37114e-07" dy="-10" flood-color="#000000" flood-opacity="0.327296" in="SourceGraphic" result="Shadow" stdDeviation="15"/>
+</filter>
+<filter color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="60" id="Filter_4" width="65.1319" x="1407.78" y="-39.6518">
+<feDropShadow dx="-4.37114e-07" dy="-10" flood-color="#000000" flood-opacity="0.327296" in="SourceGraphic" result="Shadow" stdDeviation="15"/>
+</filter>
+</defs>
+<clipPath id="ArtboardFrame">
+<rect height="500" width="1280" x="0" y="0"/>
+</clipPath>
+<g clip-path="url(#ArtboardFrame)" id="레이어-1">
+<g opacity="1"/>
+<path d="M1584.7 228.156L1584.7 325.034L1552.91 325.034L1552.91 585.606L1634.9 585.606L1634.9 578.265L1669.48 578.265L1669.48 562.858L1711.11 562.858L1711.11 609.756L1776.9 609.756L1776.9 568.77L1822.2 568.77L1822.2 593.573L1871.83 593.573L1871.83 574.708L1885.83 574.708L1885.83 593.573L1871.83 593.573L1871.83 669.081L1985.06 669.081L1985.06 637.79L2027.15 637.79L2027.15 271.071L1954.88 271.071L1954.88 382.179L1929.97 382.179L1929.97 309.377L1851.23 309.377L1851.23 427.474L1834.07 427.474L1834.07 266.762L1753.18 266.762L1753.18 381.102L1744.36 381.102L1744.36 307.548L1669.48 307.548L1669.48 228.156L1584.7 228.156Z" class="svg-color" fill-rule="nonzero" filter="url(#Filter)" stroke="none"/>
+<path d="M953.688 161.531L953.688 239.531L928.969 239.531L928.969 249.75L953.875 249.75L953.875 161.531L953.688 161.531Z" class="svg-color" fill-rule="nonzero" filter="url(#Filter_2)" stroke="none"/>
+<path d="M583.688 95.7188L583.688 192.594L551.906 192.594L551.906 333.938L540.156 333.938L540.156 241.625L511.312 241.625L511.312 163.625L438.75 163.625L438.75 303.625L415 303.625L415 154.625L370.562 154.625L370.562 130.5L290.219 130.5L290.219 217.781L254.719 217.781L254.719 116.25L167.938 116.25L167.938 268.594L136.875 268.594L136.875 204L80.4375 204L80.4375 145.25L0 145.25L0 333.938L0 478.531L0 694.469L1503.22 694.469L1503.22 333.938L1464.97 333.938L1464.97 143.156L1384.53 143.156L1384.53 201.906L1328.12 201.906L1328.12 266.5L1297.03 266.5L1297.03 114.156L1210.28 114.156L1210.28 215.688L1174.75 215.688L1174.75 128.406L1094.44 128.406L1094.44 152.531L1049.97 152.531L1049.97 301.531L1026.22 301.531L1026.22 161.531L1026.16 161.531L1026.16 138.656L953.875 138.656L953.875 161.531L953.875 249.75L928.969 249.75L928.969 239.531L928.969 176.938L850.219 176.938L850.219 295.062L833.062 295.062L833.062 134.344L752.188 134.344L752.188 248.688L743.344 248.688L743.344 175.125L668.469 175.125L668.469 95.7188L583.688 95.7188Z" class="svg-color" fill-rule="nonzero" filter="url(#Filter_3)" stroke="none"/>
+<path d="M1437.78 0.348217L1442.92 0.348217L1442.92 0.348217L1437.78 0.348217L1437.78 0.348217Z" class="svg-color" fill-rule="nonzero" filter="url(#Filter_4)" stroke="none"/>
+</g>
+</svg>

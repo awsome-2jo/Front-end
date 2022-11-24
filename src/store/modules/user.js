@@ -30,18 +30,43 @@ const UserStore = {
       context.commit("SET_LOGIN_MODAL", bool);
     },
     async register(context, user) {
+      // 아이디 체크
+      let regExp = /^[a-z]+[a-z0-9]{5,19}$/g;
+      if (!regExp.test(user.id)) {
+        alert("아이디는 영문자로 시작하는 영문자 또는 숫자 6~20자로 작성해주세요.");
+        return;
+      }
+
+      // 비밀번호 체크
+      regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}$/;
+      if (!regExp.test(user.pass)) {
+        alert("비밀번호는 8~16 영문, 숫자조합으로 작성해주세요.");
+        return;
+      }
+
+      // 이메일 체크
+      regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+      if (!regExp.test(user.email)) {
+        alert("이메일 형식을 체크해주세요!");
+        return;
+      }
+
+      // 전화번호 체크
+      regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/;
+      if (!regExp.test(user.phone)) {
+        alert("전화번호 양식을 지켜주세요. (010-0000-0000)");
+        return;
+      }
+
       const callback = (res) => {
         if (res.status == 200) {
           alert("회원가입이 완료되었습니다! 이메일을 확인해주세요");
           context.commit("SET_REGISTER_MODAL", false);
-        } else {
-          alert("회원가입에 실패하였습니다! 1");
         }
       };
-
       const fail = (res) => {
         console.log(res);
-        alert("회원가입에 실패하였습니다! 2");
+        alert("이미 존재하는 아이디 입니다!");
       };
 
       regist(user, callback, fail);

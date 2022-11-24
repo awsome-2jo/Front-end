@@ -5,13 +5,19 @@
       <div class="input-container">
         <text-input icon="user" placeholder="아이디" :value="id" @on-change="setId" />
         <text-input icon="password" placeholder="비밀번호" type="password" :value="pass" @on-change="setPass" />
-        <text-input icon="user" placeholder="이름" :value="name" @on-change="setName" />
-        <text-input icon="user" placeholder="이메일" :value="email" type="email" @on-change="setEmail" />
-        <text-input icon="user" placeholder="성별" :value="gender" @on-change="setGender" />
-        <text-input icon="user" placeholder="나이" :value="age" type="number" @on-change="setAge" />
-        <text-input icon="user" placeholder="폰번호" :value="phone" @on-change="setPhone" />
-        <text-input icon="user" placeholder="선호 사항 1" :value="preferOrder1" @on-change="setPreferOrder1" />
-        <text-input icon="user" placeholder="선호 사항 2" :value="preferOrder2" @on-change="setPreferOrder2" />
+        <text-input icon="password" placeholder="비밀번호 확인" type="password" :value="passCheck" @on-change="setPassCheck" />
+        <text-input icon="name" placeholder="이름" :value="name" @on-change="setName" />
+        <text-input icon="mail" placeholder="이메일" :value="email" type="email" @on-change="setEmail" />
+        <div class="gender-input">
+          <font-awesome-icon icon="fa-solid fa-venus-mars"/>
+          <input type="radio" v-model="gender" value="0">
+          <font-awesome-icon icon="fa-solid fa-mars" />
+          <input type="radio" v-model="gender" value="1">
+          <font-awesome-icon icon="fa-solid fa-venus" />
+          <input type="radio" v-model="gender" value="2">
+        </div>
+        <text-input icon="num" placeholder="나이" :value="age" type="number" @on-change="setAge" />
+        <text-input icon="phone" placeholder="폰번호" :value="phone" @on-change="setPhone" />
       </div>
       <button class="register-btn" @click.prevent="onregister">회원가입</button>
     </form>
@@ -28,15 +34,14 @@ export default {
   data() {
     return {
       id: "",
+      idCheck: true,
       pass: "",
+      passCheck: "",
       name: "",
       email: "",
-      gender: "",
+      gender: 0,
       age: "",
       phone: "",
-      preferOrder1: "",
-      preferOrder2: "",
-      remember: true,
     };
   },
   methods: {
@@ -49,6 +54,9 @@ export default {
     },
     setPass(pass) {
       this.pass = pass;
+    },
+    setPassCheck(pass) {
+      this.passCheck = pass;
     },
     setName(name) {
       this.name = name;
@@ -65,13 +73,11 @@ export default {
     setPhone(phone) {
       this.phone = phone;
     },
-    setPreferOrder1(preferOrder1) {
-      this.preferOrder1 = preferOrder1;
-    },
-    setPreferOrder2(preferOrder2) {
-      this.preferOrder2 = preferOrder2;
-    },
     async onregister() {
+      if(this.pass!==this.passCheck) {
+        alert("비밀번호를 확인해주세요!");
+        return;
+      }
       await this.register({
         id: this.id,
         pass: this.pass,
@@ -80,8 +86,6 @@ export default {
         gender: this.gender,
         age: this.age,
         phone: this.phone,
-        preferOrder1: this.preferOrder1,
-        preferOrder2: this.preferOrder2,
       });
       if (this.userInfo) {
         this.setRegisterModal();
@@ -114,9 +118,19 @@ export default {
   background-color: var(--shadow);
   animation: fade-in 0.5s linear;
 }
+.gender-input {
+  display: flex;
+  color: var(--navy);
+  justify-content: center;
+  font-size: 24px;
+}
+.gender-input > input {
+  margin-right: 20px;
+}
 .register-form {
   width: 400px;
-  height: 700px;
+  height: fit-content;
+  padding-bottom: 80px;
   border-radius: 10px;
   background-color: var(--white);
   box-shadow: 4px 4px 5px var(--shadow);
@@ -127,7 +141,6 @@ export default {
   animation: toast-up 0.5s ease-out;
 }
 .input-container {
-  height: 100px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

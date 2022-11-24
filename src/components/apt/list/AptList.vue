@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <ul ref="list">
     <div v-if="loading" class="loading"><font-awesome-icon icon="fa-solid fa-circle-notch" /></div>
 
     <!-- TODO: 분기처리. 목록 없는 경우 없음을 알림 -->
@@ -27,17 +27,21 @@ export default {
   data() {
     return {
       list: [],
+      start: 0,
+      amount: 20,
       loading: false,
     };
   },
   methods: {
     /******** 지역코드에 따른 데이터 출력 함수 ********/
     async getList() {
+      console.log("hi!");
       this.loading = true;
-      let params = { regcode: this.regcode, amount: 20 };
+      let params = { regcode: this.regcode, start: this.start, amount: this.amount };
 
       const callback = (res) => {
-        this.list = res.data;
+        this.list = [...this.list, ...res.data];
+        this.start += this.amount;
       };
       const error = (error) => {
         console.log(error);
@@ -59,6 +63,13 @@ export default {
   created() {
     this.getList();
   },
+  mounted() {
+    this.$refs.list.addEventListener("scroll",
+    ($event)=> {
+      let {scrollHeight, scrollTop, clientHeight} = $event.target;
+      if(scrollHeight - scrollTop < clientHeight + 200) this.getList();
+    });
+  }
 };
 </script>
 
