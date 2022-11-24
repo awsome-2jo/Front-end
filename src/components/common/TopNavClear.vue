@@ -64,6 +64,9 @@ header {
   justify-content: center;
   border-bottom: 1px solid var(--shadow);
 }
+header * {
+  color:var(--white);
+}
 .outline {
   outline: 1px solid var(--white);
 }
