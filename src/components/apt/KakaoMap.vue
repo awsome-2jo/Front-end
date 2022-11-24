@@ -101,10 +101,9 @@ export default {
       this.lastAddressArr = [result[0].region_1depth_name, result[0].region_2depth_name, result[0].region_3depth_name];
 
       // 확대 크기(level)에 따라 지역코드 길이 조절
-      if (level > 6) this.drawRegMarkers(result[0], level);
+      if (level > 4) this.drawRegMarkers(result[0], level);
       else {
-        if (level == 6) regcode = regcode.slice(0, 2);
-        else if (level >= 5) regcode = regcode.slice(0, 5);
+        if (level >= 4) regcode = regcode.slice(0, 5);
         else if (level >= 2) regcode = regcode.slice(0, 7);
         this.getAptMarkers(regcode);
       }
@@ -124,21 +123,21 @@ export default {
     resetMarkers(option) {
       for (let arr in this.markers) {
         if (option && (arr === "apt" || arr === "reg")) continue;
-        for (let marker of this.markers[arr]) {
-          marker.setMap(null);
+        while (this.markers[arr].length) {
+          this.markers[arr].shift().setMap(null);
         }
       }
-      this.markers = {
-        apt: [],
-        reg: [],
-        MT1: [],
-        CS2: [],
-        SC4: [],
-        SW8: [],
-        CT1: [],
-        CE7: [],
-        HP8: [],
-      };
+      // this.markers = {
+      //   apt: [],
+      //   reg: [],
+      //   MT1: [],
+      //   CS2: [],
+      //   SC4: [],
+      //   SW8: [],
+      //   CT1: [],
+      //   CE7: [],
+      //   HP8: [],
+      // };
     },
     // 지역 마커 그리기
     drawRegMarkers(data, level) {
