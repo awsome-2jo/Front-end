@@ -6,6 +6,23 @@
 import { getAptList, getDong, getGugun, getSido } from "@/api/apt";
 import { mapActions, mapState } from "vuex";
 import AptIcon from "@/assets/imgs/AptIcon.js";
+import CafeIcon from "@/assets/imgs/cafe.js";
+import CultureIcon from "@/assets/imgs/culture.js";
+import HospitalIcon from "@/assets/imgs/hospital.js";
+import MartIcon from "@/assets/imgs/mart.js";
+import SchoolIcon from "@/assets/imgs/school.js";
+import StoreIcon from "@/assets/imgs/store.js";
+import SubwayIcon from "@/assets/imgs/subway.js";
+
+const placeArr = {
+  MT1: { name: "대형마트", icon: MartIcon },
+  CS2: { name: "편의점", icon: StoreIcon },
+  SC4: { name: "학교", icon: SchoolIcon },
+  SW8: { name: "지하철역", icon: SubwayIcon },
+  CT1: { name: "문화시설", icon: CultureIcon },
+  CE7: { name: "카페", icon: CafeIcon },
+  HP8: { name: "병원", icon: HospitalIcon },
+};
 
 // 카카오 마커 이미지, 곧 수정할 예정
 const imageSrc = require("@/assets/imgs/AptIcon.svg");
@@ -52,7 +69,10 @@ export default {
       // 지도 불러오기 성공 시 위치 default로 설정하기
       this.setLocation();
       // 지도 이동 이벤트 추가
-      kakao.maps.event.addListener(this.map, "bounds_changed", this.setCenter);
+      kakao.maps.event.addListener(this.map, "idle", this.setCenter);
+
+      // 장소 검색 객체 추가
+      this.ps = new kakao.maps.services.Places(this.map);
     },
     // 지도 이동 메서드
     setLocation() {
@@ -74,16 +94,16 @@ export default {
       this.lastAddressArr = [result[0].region_1depth_name, result[0].region_2depth_name, result[0].region_3depth_name];
 
       // 확대 크기(level)에 따라 지역코드 길이 조절
-      if (level >= 6) this.drawRegMarkers(result[0], level);
+      if (level > 6) this.drawRegMarkers(result[0], level);
       else {
-        if (level == 5) regcode = regcode.slice(0, 2);
-        else if (level >= 3) regcode = regcode.slice(0, 5);
+        if (level == 6) regcode = regcode.slice(0, 2);
+        else if (level >= 5) regcode = regcode.slice(0, 5);
         else if (level >= 2) regcode = regcode.slice(0, 7);
         this.getAptMarkers(regcode);
       }
     },
     // 중심좌표 변경 메서드
-    setCenter() {
+    async setCenter() {
       let center = this.map.getCenter();
       const callback = (result, status) => {
         if (status === kakao.maps.services.Status.OK) {
@@ -91,11 +111,12 @@ export default {
           this.setMarkers(result, level);
         }
       };
-      this.geocoder.coord2RegionCode(center.getLng(), center.getLat(), callback);
+      await this.geocoder.coord2RegionCode(center.getLng(), center.getLat(), callback);
     },
     // 모든 마커 삭제
-    resetMarkers() {
+    resetMarkers(option) {
       for (let arr in this.markers) {
+        if (option && (arr === "apt" || arr === "reg")) continue;
         for (let marker of this.markers[arr]) {
           marker.setMap(null);
         }
@@ -133,7 +154,7 @@ export default {
         console.log(err);
       };
 
-      if (level < 7) {
+      if (level < 8) {
         regcode = regcode.slice(0, 5);
         address = data.region_1depth_name + " " + data.region_2depth_name;
         if (address === this.lastAddress) return;
@@ -155,8 +176,8 @@ export default {
       }
     },
     // 아파트 마커 정보 추출 메서드
-    getAptMarkers(regcode) {
-      let params = { regcode: regcode, amount: 50 };
+    async getAptMarkers(regcode) {
+      let params = { regcode: regcode, amount: 100 };
       const resolve = (res) => {
         this.data.apt = [...res.data].sort((a, b) => {
           if (a.lat === b.lat) return a.lng - b.lng;
@@ -164,18 +185,51 @@ export default {
         });
       };
       const reject = (err) => console.log(err);
-      getAptList(params, resolve, reject).then(this.drawAptMarkers);
+      await getAptList(params, resolve, reject).then(this.drawAptMarkers);
+    },
+    // 카테고리 정보 추출 메서드
+    getPlaceMarkers(opt) {
+      // 기존 마커 삭제
+      this.resetMarkers(opt);
+      for (let category in this.place) {
+        if (!this.place[category]) continue;
+        let callback = (data, status) => {
+          if (status === kakao.maps.services.Status.OK) {
+            let markers = [];
+            for (let item of data) {
+              // address_name
+              // category_group_code
+              // place_name
+              // place_url
+              // x, y
+              let latlng = new kakao.maps.LatLng(item.y, item.x);
+              let marker = new kakao.maps.CustomOverlay({
+                map: this.map, // 마커를 표시할 지도
+                position: latlng,
+                title: item.place_name,
+                content: `
+                <div class="place-marker">
+                  ${placeArr[category].icon}
+                  <span>${item.place_name}</span>
+                </div>`,
+              });
+              markers.push(marker);
+            }
+            this.markers[category] = markers;
+          }
+        };
+        this.ps.categorySearch(category, callback, { useMapBounds: true });
+      }
     },
     // 아파트 마커 그리기
     drawAptMarkers() {
-      // 기존 마커 삭제
-      this.resetMarkers();
+      // 카테고리별 마크 추가
+      this.getPlaceMarkers();
 
-      let aptMarkers = [];
       for (let apt of this.data.apt) {
         let latlng = new kakao.maps.LatLng(apt.lat, apt.lng);
 
-        aptMarkers.push(
+        this.markers.apt.push(
           new kakao.maps.CustomOverlay({
             map: this.map, // 마커를 표시할 지도
             position: latlng,
@@ -191,7 +245,6 @@ export default {
           })
         );
       }
-      this.markers.apt = aptMarkers;
     },
     // 지역 마커 클릭 이벤트
     zumInReg($event) {
@@ -236,7 +289,7 @@ export default {
   },
 
   computed: {
-    ...mapState("AptStore", ["mapDiv", "sido", "gugun", "dong", "regcode", "sideX", "target"]),
+    ...mapState("AptStore", ["mapDiv", "sido", "gugun", "dong", "regcode", "sideX", "target", "place"]),
   },
   watch: {
     regcode() {
@@ -249,6 +302,9 @@ export default {
     },
     target() {
       this.map.panTo(this.target.latlng);
+    },
+    place() {
+      this.getPlaceMarkers(true);
     },
   },
   mounted() {
@@ -321,7 +377,28 @@ export default {
   width: 60px;
   height: 60px;
 }
-.apt-marker svg .svg-color {
+.place-marker svg {
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+.place-marker span {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  position: absolute;
+  opacity: 0;
+}
+.place-marker:hover span {
+  font-size: 8px;
+  border-radius: 8px;
+  color: var(--white);
+  background: var(--navy);
+  opacity: 0.9;
+  padding: 4px;
+}
+svg .svg-color {
   fill: var(--navy);
 }
 </style>

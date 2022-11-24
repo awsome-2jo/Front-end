@@ -1,13 +1,23 @@
 <template>
   <div :class="{ on: value, off: !value }" @click="toggle">
     <div class="ball"></div>
+    <span class="text">{{ text }}</span>
   </div>
 </template>
 
 <script>
 export default {
   name: "ToggleButton",
-  props: { value: Boolean },
+  props: {
+    value: {
+      type: Boolean,
+      default: false,
+    },
+    text: {
+      type: String,
+      default: "test",
+    },
+  },
   methods: {
     toggle() {
       this.$emit("event");
@@ -18,12 +28,31 @@ export default {
 
 <style scoped>
 div {
-  width: 60px;
+  width: 80px;
   height: 24px;
   border-radius: 15px;
   position: relative;
   box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
   transition: all 0.1s linear;
+}
+span {
+  position: absolute;
+  line-height: 24px;
+  width: 100%;
+  text-align: center;
+  top: 0;
+  font-weight: 700;
+  font-size: 12px;
+  opacity: 0.8;
+  transition: all 0.1s linear;
+}
+.on span {
+  color: var(--white);
+  margin-left: 5px;
+}
+.off span {
+  color: var(--black);
+  margin-left: -5px;
 }
 .on {
   background-color: var(--navy);
@@ -32,7 +61,7 @@ div {
   transition: all 0.1s linear;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
 }
-.on::before {
+/* .on::before {
   content: "ON";
   position: absolute;
   color: var(--white);
@@ -41,7 +70,7 @@ div {
   top: 50%;
   left: 50%;
   transform: translate(0, -50%);
-}
+} */
 .on .ball {
   width: 16px;
   height: 16px;
@@ -56,7 +85,7 @@ div {
 .off {
   background-color: var(--darkgray);
 }
-.off::before {
+/* .off::before {
   content: "OFF";
   position: absolute;
   color: var(--black);
@@ -66,16 +95,16 @@ div {
   top: 50%;
   right: 45%;
   transform: translate(0, -50%);
-}
+} */
 .off .ball {
   width: 16px;
   height: 16px;
   background-color: var(--white);
   border-radius: 10px;
-  transform: translate(calc(40px), 4px);
+  transform: translate(calc(60px), 4px);
 }
 .off:hover .ball {
-  transform: translate(calc(40px), 4px) scale(120%);
+  transform: translate(calc(60px), 4px) scale(120%);
   transition: all 0.1s linear;
 }
 </style>

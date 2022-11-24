@@ -13,7 +13,15 @@ const AptStore = {
 
     sideX: 0,
     target: null,
-    place: [],
+    place: {
+      MT1: false,
+      CS2: false,
+      SC4: false,
+      SW8: false,
+      CT1: false,
+      CE7: false,
+      HP8: false,
+    },
 
     // TODO : add filtering state
     keyword: "",
@@ -75,10 +83,8 @@ const AptStore = {
     setTarget(context, target) {
       context.commit("SET_TARGET", target);
     },
-    setPlace(context, target) {
-      let list = this.state.places;
-      if (target in list) context.commit("SET_PLACE", list.filter(val => val !== target));
-      else context.commit("SET_PLACE", [...list, target]);
+    setPlace(context, place) {
+      context.commit("SET_PLACE", place);
     },
     /************* 지역 변경 메서드 **************/
     async setAddress(context, data) {

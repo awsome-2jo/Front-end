@@ -2,6 +2,7 @@
   <main class="apt-component">
     <filter-nav />
     <kakao-map />
+    <place-nav />
     <side-drop />
   </main>
 </template>
@@ -10,9 +11,10 @@
 import FilterNav from "@/components/apt/FilterNav.vue";
 import SideDrop from "@/components/apt/SideDrop.vue";
 import KakaoMap from "@/components/apt/KakaoMap.vue";
+import PlaceNav from "@/components/apt/PlaceNav.vue";
 
 export default {
-  components: { SideDrop, FilterNav, KakaoMap },
+  components: { SideDrop, FilterNav, KakaoMap, PlaceNav },
   name: "AptMap",
 };
 </script>
