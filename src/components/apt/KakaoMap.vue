@@ -314,6 +314,7 @@ export default {
       this.map?.relayout();
     },
     target() {
+      this.map.setLevel(2);
       this.map.panTo(this.target.latlng);
     },
     place() {
