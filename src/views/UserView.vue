@@ -44,7 +44,7 @@
           <div>
             <font-awesome-icon icon="fa-solid fa-venus-mars" class="icon" />
             <label>성별</label>
-            <input v-if="defaultMode" type="phone" placeholder="-" :value="genderString" disabled>
+            <input v-if="defaultMode" type="text" placeholder="-" :value="user.gender==1?`남자`:user.gender==2?`여자`:``" disabled>
             <div v-else class="radio">
               <font-awesome-icon icon="fa-solid fa-venus-mars"/>
               <input type="radio" v-model="user.gender" value="0">
@@ -57,7 +57,7 @@
           <div>
             <font-awesome-icon icon="fa-solid fa-hashtag" class="icon" />
             <label>나이</label>
-            <input type="number" v-model="user.number" placeholder="-" :disabled="defaultMode">
+            <input type="number" v-model="user.age" placeholder="-" :disabled="defaultMode">
           </div>
         </div>
 
@@ -129,8 +129,8 @@ export default {
     async initUserData() {
       const resolve = (res) => {
       // 성공시 받아온 데이터 저장
-      let {id, email, name, age, gender } = res.data;
-      this.user = {id, email, name, age, gender};
+      let {id, email, name, age, gender, phone } = res.data;
+      this.user = {id, email, name, age, gender, phone};
     }
     const reject = (err) => {
       console.log(err);
@@ -149,9 +149,6 @@ export default {
     defaultMode() {
       return this.mode==='default';
     },
-    genderString() {
-      return this.user.age==1?`남자`:this.user.age==2 ?`여자`: ``;
-    }
   },
   created() {
     this.initUserData();
