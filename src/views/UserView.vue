@@ -106,8 +106,8 @@ export default {
         alert("변경을 실패하였습니다!");
       }
       let body = {};
-      this.user.gender = 0; // 성별의 경우 0도 값이므로 추가
-      this.user.age = 0;
+      body.gender = 0; // 성별의 경우 0도 값이므로 추가
+      body.age = 0;
       for(let item in this.user) {
         if(this.user[item]) body[item] = this.user[item];
       }
