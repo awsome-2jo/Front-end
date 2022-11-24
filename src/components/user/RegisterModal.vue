@@ -5,6 +5,7 @@
       <div class="input-container">
         <text-input icon="user" placeholder="아이디" :value="id" @on-change="setId" />
         <text-input icon="password" placeholder="비밀번호" type="password" :value="pass" @on-change="setPass" />
+        <text-input icon="password" placeholder="비밀번호 확인" type="password" :value="passCheck" @on-change="setPassCheck" />
         <text-input icon="name" placeholder="이름" :value="name" @on-change="setName" />
         <text-input icon="mail" placeholder="이메일" :value="email" type="email" @on-change="setEmail" />
         <div class="gender-input">
@@ -35,6 +36,7 @@ export default {
       id: "",
       idCheck: true,
       pass: "",
+      passCheck: "",
       name: "",
       email: "",
       gender: 0,
@@ -53,6 +55,9 @@ export default {
     setPass(pass) {
       this.pass = pass;
     },
+    setPassCheck(pass) {
+      this.passCheck = pass;
+    },
     setName(name) {
       this.name = name;
     },
@@ -69,6 +74,10 @@ export default {
       this.phone = phone;
     },
     async onregister() {
+      if(this.pass!==this.passCheck) {
+        alert("비밀번호를 확인해주세요!");
+        return;
+      }
       await this.register({
         id: this.id,
         pass: this.pass,
