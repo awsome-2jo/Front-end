@@ -117,8 +117,8 @@ export default {
       if(!confirm("정말로 탈퇴하시겠습니까?")) return;
 
       const resolve = () => {
-        alert("탈퇴되었습니다!");
-        this.$store.commit("LOGOUT");
+        this.logout();
+        alert("탈퇴되었습니다! 그동안 HOME:IN을 이용해주셔서 감사합니다");
         this.$router.push("/");
       }
       const reject = () => {
