@@ -53,9 +53,11 @@ export default {
 .label {
   font-size: 12px;
   margin-bottom: 2px;
+  white-space: nowrap;
 }
 .value {
   font-size: 16px;
   font-weight: 900;
+  white-space: nowrap;
 }
 </style>
