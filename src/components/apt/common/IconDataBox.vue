@@ -29,6 +29,7 @@ export default {
         subway: "fa-train-subway",
         bus: "fa-bus",
         school: "fa-schoo",
+        handshake: "fa-handshake-simple",
       },
     };
   },

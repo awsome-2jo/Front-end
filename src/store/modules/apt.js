@@ -11,6 +11,7 @@ const AptStore = {
     dongList: [],
     regcode: "",
 
+    sideX: 0,
     aptCode: "",
     target: null,
     place: [],
@@ -19,6 +20,9 @@ const AptStore = {
   },
   getters: {},
   mutations: {
+    SET_SIDE_X(state, val) {
+      state.sideX = val;
+    },
     SET_TARGET(state, val) {
       state.target = val;
     },
@@ -57,6 +61,9 @@ const AptStore = {
     },
   },
   actions: {
+    setSideX(context, x) {
+      context.commit("SET_SIDE_X", x);
+    },
     setTarget(context, target) {
       context.commit("SET_TARGET", target);
     },

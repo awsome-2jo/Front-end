@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView";
 import AptView from "../views/AptView";
 import NoticeView from "../views/NoticeView";
 import NewsView from "../views/NewsView";
+import RequestView from "../views/RequestView";
 import MyPageView from "../views/MyPageView";
 
 Vue.use(VueRouter);
@@ -13,6 +14,14 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+    meta: {
+      title: "HOME:IN - 아파트 실거래가 정보 사이트",
+    },
+  },
+  {
+    path: "/confirm/:data",
+    name: "confirm",
+    component: RequestView,
     meta: {
       title: "HOME:IN - 아파트 실거래가 정보 사이트",
     },
@@ -29,6 +38,16 @@ const routes = [
     path: "/apt",
     name: "aptMap",
     component: AptView,
+    beforeEnter: (to, from, next) => {
+      const script = document.createElement("script");
+      script.id = "kakao";
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAO_KEY}&libraries=services`;
+      document.head.appendChild(script);
+
+      script.addEventListener("load", () => {
+        next();
+      });
+    },
     meta: {
       title: "HOME:IN - 실거래 정보",
     },
