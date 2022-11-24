@@ -42,6 +42,13 @@ export default {
       markers: {
         apt: [],
         reg: [],
+        MT1: [],
+        CS2: [],
+        SC4: [],
+        SW8: [],
+        CT1: [],
+        CE7: [],
+        HP8: [],
       },
       data: {
         apt: [],
@@ -124,6 +131,13 @@ export default {
       this.markers = {
         apt: [],
         reg: [],
+        MT1: [],
+        CS2: [],
+        SC4: [],
+        SW8: [],
+        CT1: [],
+        CE7: [],
+        HP8: [],
       };
     },
     // 지역 마커 그리기
@@ -158,20 +172,20 @@ export default {
         regcode = regcode.slice(0, 5);
         address = data.region_1depth_name + " " + data.region_2depth_name;
         if (address === this.lastAddress) return;
-        this.lastAddress = address;
         this.resetMarkers();
+        this.lastAddress = address;
         getDong(regcode, resolve, reject);
       } else if (level < 11) {
         regcode = regcode.slice(0, 2);
         address = data.region_1depth_name;
         if (address === this.lastAddress) return;
-        this.lastAddress = address;
         this.resetMarkers();
+        this.lastAddress = address;
         getGugun(regcode, resolve, reject);
       } else {
         if (address === this.lastAddress) return;
-        this.lastAddress = address;
         this.resetMarkers();
+        this.lastAddress = address;
         getSido(resolve, reject);
       }
     },
@@ -215,7 +229,7 @@ export default {
               });
               markers.push(marker);
             }
-            this.markers[category] = markers;
+            this.markers[category] = [...this.markers[category], ...markers];
           }
         };
         this.ps.categorySearch(category, callback, { useMapBounds: true });

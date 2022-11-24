@@ -12,15 +12,6 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-// const placeArr = {
-//   MT1: { name: "대형마트", icon: MartIcon },
-//   CS2: { name: "편의점", icon: StoreIcon },
-//   SC4: { name: "학교", icon: SchoolIcon },
-//   SW8: { name: "지하철역", icon: SubwayIcon },
-//   CT1: { name: "문화시설", icon: CultureIcon },
-//   CE7: { name: "카페", icon: CafeIcon },
-//   HP8: { name: "병원", icon: HospitalIcon },
-// };
 import ToggleButton from "../common/ToggleButton.vue";
 export default {
   components: { ToggleButton },
@@ -57,11 +48,20 @@ export default {
   height: 60px;
   width: 100%;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.place-nav > div {
+  margin: 5px;
+  border: 2px solid var(--shadow);
 }
 .place-nav::before {
   content: "";
   height: 100%;
-  width: 100%;
+  width: calc(100% + 10px);
+  left: -10px;
   position: absolute;
   background-color: var(--navy);
   opacity: 0.2;
