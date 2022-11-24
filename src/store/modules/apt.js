@@ -12,11 +12,15 @@ const AptStore = {
     regcode: "",
 
     sideX: 0,
-    aptCode: "",
     target: null,
     place: [],
 
     // TODO : add filtering state
+    keyword: "",
+    minarea: -1,
+    maxarea: -1,
+    mindeal: -1,
+    maxdeal: -1,
   },
   getters: {},
   mutations: {
@@ -28,9 +32,6 @@ const AptStore = {
     },
     SET_PLACE(state, val) {
       state.place = val;
-    },
-    SET_APT_CODE(state, val) {
-      state.aptCode = val;
     },
     SET_REGCODE(state, val) {
       state.regcode = val;
@@ -59,6 +60,13 @@ const AptStore = {
       if (!arr) arr = [];
       state.dongList = arr;
     },
+    SET_FILTER(state, data) {
+      state.keyword = data.keyword;
+      state.minarea = data.minarea;
+      state.maxarea = data.maxarea;
+      state.mindeal = data.mindeal;
+      state.maxdeal = data.maxdeal;
+    },
   },
   actions: {
     setSideX(context, x) {
@@ -72,10 +80,14 @@ const AptStore = {
       if (target in list) context.commit("SET_PLACE", list.filter(val => val !== target));
       else context.commit("SET_PLACE", [...list, target]);
     },
-    setAptCode(context, aptCode) {
-      context.commit("SET_APT_CODE", aptCode);
-    },
     /************* 지역 변경 메서드 **************/
+    async setAddress(context, data) {
+      context.commit("SET_SIDO", data.address[0]);
+      context.commit("SET_GUGUN", data.address[1]);
+      context.commit("SET_DONG", data.address[2]);
+      context.dispatch("setGugunList", data.code.concat().slice(0, 2));
+      context.dispatch("setDongList", data.code.concat().slice(0, 5));
+    },
     // 광역시/도 변경 메서드
     setSido(context, data) {
       // 변경한 값 설정
@@ -151,6 +163,11 @@ const AptStore = {
       }
       return data;
     },
+
+    // 필터 설정
+    setFilter(context, data) {
+      context.commit("SET_FILTER", data);
+    }
   },
   modules: {},
 };

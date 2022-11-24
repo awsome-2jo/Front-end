@@ -68,15 +68,18 @@ export default {
     },
   },
   computed: {
-    ...mapState("AptStore", ["regcode", "sido", "gugun", "dong", "aptCode", "sideX"]),
+    ...mapState("AptStore", ["regcode", "sido", "gugun", "dong", "target", "sideX"]),
   },
   watch: {
     // x값 변경에 따라 side 컴포넌트 너비 조정
     x() {
       this.$refs.side.style.width = `${this.x}px`;
     },
-    aptCode() {
-      if (this.aptCode) this.x = 900;
+    target() {
+      if (this.target && this.x < 1000) {
+        this.setSideX(1000);
+        this.x = 1000;
+      }
     },
   },
   mounted() {
@@ -134,6 +137,7 @@ export default {
   overflow: hidden;
 }
 .content {
+  position: relative;
   display: flex;
   height: 100%;
   margin-top: -2px;
@@ -145,6 +149,8 @@ export default {
   min-width: 450px;
 }
 .address-header {
+  position: relative;
+  z-index: 1000;
   width: 100%;
   height: 60px;
   display: flex;

@@ -3,8 +3,8 @@
     <div v-if="data">
       <div id="roadview"></div>
       <div class="apt-name">
-        <span>대학로27번길 11 ・2011년</span>
-        <h1>리베라 아이누리</h1>
+        <span>{{ data.roadName }} ・ {{ data.buildYear }}년 건축물</span>
+        <h1>{{ data.apartmentName }}</h1>
       </div>
       <div class="flex-container">
         <div class="summarize-info icon-data-container">
@@ -39,7 +39,8 @@
             </div>
           </div>
         </div>
-        <apt-chart />
+        <apt-chart :data="countData" title="거래량" label="m²" header="매물별 거래량 통계" />
+        <apt-chart :data="amountData" title="거래가" label="m²" header="매물별 거래가 통계" />
       </div>
     </div>
   </div>
@@ -61,6 +62,8 @@ export default {
       roadview: null,
       roadviewClient: null,
       data: null,
+      amountData: null,
+      countData: null,
       place: {
         kindergarden: 0,
         hospital: 0,
@@ -94,7 +97,50 @@ export default {
         console.log("아파트 상세 정보 요청을 실패하였습니다!", err);
       };
       getAptDetail(this.target.aptCode, resolve, reject);
-      kakao.maps.load(this.initRoadView);
+    },
+    // 아파트 거래량 데이터 가공
+    getDealCountData() {
+      // {면적, { ...[{ 거래일자, 거래량 }]}}
+      let startYear = Number(this.data.buildYear);
+      startYear = startYear < 2015 ? 2015 : startYear;
+
+      let data = {};
+      for (let item of this.data.list) {
+        if (!data[item.area]) {
+          data[item.area] = [];
+          for (let year = startYear; year <= 2022; year++) {
+            data[item.area][year - startYear] = { label: `${year}년`, value: 0 };
+          }
+        }
+        data[item.area][item.dealYear - startYear].value++;
+      }
+      return data;
+    },
+    // 아파트 거래가 데이터 가공
+    getDealAmountData() {
+      // {면적, { ...[{ 거래일자, 거래량 }]}}
+      let startYear = Number(this.data.buildYear);
+      startYear = startYear < 2015 ? 2015 : startYear;
+
+      let data = {};
+      for (let item of this.data.list) {
+        if (!data[item.area]) {
+          data[item.area] = [];
+          for (let year = startYear; year <= 2022; year++) {
+            data[item.area][year - startYear] = { label: `${year}년`, value: 0, count: 0 };
+          }
+        }
+        data[item.area][item.dealYear - startYear].count++;
+        data[item.area][item.dealYear - startYear].value += Number(item.dealAmount.split(",").join(""));
+      }
+      for (let area in data) {
+        for (let i = 0; i < data[area].length; i++) {
+          if (data[area][i].count) data[area][i].value /= data[area][i].count;
+          data[area][i].value = Math.round(data[area][i].value);
+        }
+      }
+      console.log(data);
+      return data;
     },
   },
   computed: {
@@ -132,6 +178,7 @@ export default {
   watch: {
     target() {
       if (this.target) {
+        this.initRoadView();
         let position = this.target.latlng;
         // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
         this.roadviewClient.getNearestPanoId(position, 100, (panoId) => {
@@ -140,8 +187,13 @@ export default {
         this.setData();
       }
     },
+    data() {
+      this.amountData = this.getDealAmountData();
+      this.countData = this.getDealCountData();
+    },
   },
-  created() {
+  created() {},
+  mounted() {
     if (this.target) this.setData();
   },
 };
@@ -149,10 +201,14 @@ export default {
 
 <style scoped>
 .container {
+  position: relative;
   flex-grow: 1;
   height: 100%;
+  min-width: 550px;
+}
+.container > div {
   overflow-y: scroll;
-  min-width: 500px;
+  height: calc(100% - 80px);
 }
 #roadview {
   width: 100%;
