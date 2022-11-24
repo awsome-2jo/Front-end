@@ -108,7 +108,7 @@ export default {
         this.mode = 'login';
       }
       const reject = () => {
-        alert(`아이디 찾기에 실패하였습니다! 입력한 정보를 다시 확인해주세요.`);
+        alert(`비밀번호 찾기에 실패하였습니다! 입력한 정보를 다시 확인해주세요.`);
       }
 
       await findPass({name, email, phone, id}, resolve, reject);
