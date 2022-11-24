@@ -22,10 +22,11 @@ export default {
   components: { TextInput, CheckboxButton },
   name: "LoginModal",
   data() {
+    let _id = localStorage.getItem("home-in-id");
     return {
-      id: "",
+      id: _id ? _id : "",
       pass: "",
-      remember: true,
+      remember: Boolean(localStorage.getItem("home-in-id")),
     };
   },
   methods: {
@@ -42,6 +43,8 @@ export default {
     async onLogin() {
       await this.login({ id: this.id, pass: this.pass });
       if (this.userInfo) {
+        if(this.remember) localStorage.setItem("home-in-id", this.id);
+        else localStorage.removeItem("home-in-id");
         this.setLoginModal();
       }
     },
