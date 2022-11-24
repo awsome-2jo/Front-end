@@ -68,15 +68,18 @@ export default {
     },
   },
   computed: {
-    ...mapState("AptStore", ["regcode", "sido", "gugun", "dong", "aptCode", "sideX"]),
+    ...mapState("AptStore", ["regcode", "sido", "gugun", "dong", "target", "sideX"]),
   },
   watch: {
     // x값 변경에 따라 side 컴포넌트 너비 조정
     x() {
       this.$refs.side.style.width = `${this.x}px`;
     },
-    aptCode() {
-      if (this.aptCode) this.x = 900;
+    target() {
+      if (this.target && this.x < 1000) {
+        this.setSideX(1000);
+        this.x = 1000;
+      }
     },
   },
   mounted() {

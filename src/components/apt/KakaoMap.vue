@@ -15,10 +15,13 @@ export default {
   data() {
     return {
       map: null,
+      ps: null,
       geocoder: null,
       imageSize: null,
       markerImage: null,
       lastAddress: "", // 지도 깜빡이 방지용 변수. 이전에 적용한 주소값 저장
+      lastRegcode: "",
+      lastAddressArr: [],
       markers: {
         apt: [],
         reg: [],
@@ -30,7 +33,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("AptStore", ["setMap", "setTarget", "setSideX"]),
+    ...mapActions("AptStore", ["setMap", "setTarget", "setSideX", "setAddress"]),
     // 지도 삽입 메서드
     initMap() {
       console.log("kakao map init");
@@ -51,7 +54,6 @@ export default {
       // 지도 이동 이벤트 추가
       kakao.maps.event.addListener(this.map, "bounds_changed", this.setCenter);
     },
-
     // 지도 이동 메서드
     setLocation() {
       const callback = (result, status) => {
@@ -65,21 +67,21 @@ export default {
       let address = [this.sido, this.gugun, this.dong].filter((val) => val).join(" ");
       this.geocoder.addressSearch(address ? address : "서울특별시", callback);
     },
-
     // 마커 그리기 이벤트
     setMarkers(result, level) {
       let regcode = result[0].code;
+      this.lastRegcode = regcode;
+      this.lastAddressArr = [result[0].region_1depth_name, result[0].region_2depth_name, result[0].region_3depth_name];
 
       // 확대 크기(level)에 따라 지역코드 길이 조절
-      if (level >= 5) this.drawRegMarkers(result[0], level);
+      if (level >= 6) this.drawRegMarkers(result[0], level);
       else {
-        if (level > 4) regcode = regcode.slice(0, 2);
-        else if (level > 3) regcode = regcode.slice(0, 5);
-        else if (level > 2) regcode = regcode.slice(0, 7);
+        if (level == 5) regcode = regcode.slice(0, 2);
+        else if (level >= 3) regcode = regcode.slice(0, 5);
+        else if (level >= 2) regcode = regcode.slice(0, 7);
         this.getAptMarkers(regcode);
       }
     },
-
     // 중심좌표 변경 메서드
     setCenter() {
       let center = this.map.getCenter();
@@ -91,7 +93,6 @@ export default {
       };
       this.geocoder.coord2RegionCode(center.getLng(), center.getLat(), callback);
     },
-
     // 모든 마커 삭제
     resetMarkers() {
       for (let arr in this.markers) {
@@ -104,7 +105,6 @@ export default {
         reg: [],
       };
     },
-
     // 지역 마커 그리기
     drawRegMarkers(data, level) {
       let regcode = data.code;
@@ -215,9 +215,10 @@ export default {
       while (target !== this.$el) {
         if (target.className === "apt-marker") {
           let { x, y, aptcode } = target.dataset;
-          this.map.panTo(new kakao.maps.LatLng(+y, +x));
+          // this.map.panTo(new kakao.maps.LatLng(+y, +x));
           let latlng = new kakao.maps.LatLng(+y, +x);
           let apttarget = { aptCode: aptcode, latlng };
+          this.setAddress({ code: this.lastRegcode, address: this.lastAddressArr });
           this.setTarget(apttarget);
           break;
         } else target = target.parentNode;
@@ -235,7 +236,7 @@ export default {
   },
 
   computed: {
-    ...mapState("AptStore", ["mapDiv", "sido", "gugun", "dong", "regcode", "sideX"]),
+    ...mapState("AptStore", ["mapDiv", "sido", "gugun", "dong", "regcode", "sideX", "target"]),
   },
   watch: {
     regcode() {
@@ -245,6 +246,9 @@ export default {
       console.log(this.sideX);
       this.$el.style.width = `calc(100% - ${this.sideX}px)`;
       this.map?.relayout();
+    },
+    target() {
+      this.map.panTo(this.target.latlng);
     },
   },
   mounted() {

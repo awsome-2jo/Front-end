@@ -41,7 +41,7 @@ export default {
     data: Object,
   },
   methods: {
-    ...mapActions("AptStore", ["setAptCode"]),
+    ...mapActions("AptStore", ["setTarget"]),
     getDealString(deal) {
       let urk = Math.round(deal / 10000);
       let marn = deal % 10000;
@@ -51,8 +51,10 @@ export default {
       return `${arr.join(" ")}원`;
     },
     onClick() {
-      console.log(this.data.aptCode);
-      this.setAptCode(this.data.aptCode);
+      /* global kakao */
+      let latlng = new kakao.maps.LatLng(this.data.lat, this.data.lng);
+      let apttarget = { aptCode: this.data.aptCode, latlng };
+      this.setTarget(apttarget);
     },
   },
 };

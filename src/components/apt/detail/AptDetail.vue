@@ -3,8 +3,8 @@
     <div v-if="data">
       <div id="roadview"></div>
       <div class="apt-name">
-        <span>{{data.roadName}} ・ {{data.buildYear}}년 건축물</span>
-        <h1>{{data.apartmentName}}</h1>
+        <span>{{ data.roadName }} ・ {{ data.buildYear }}년 건축물</span>
+        <h1>{{ data.apartmentName }}</h1>
       </div>
       <div class="flex-container">
         <div class="summarize-info icon-data-container">
@@ -102,17 +102,17 @@ export default {
     getDealCountData() {
       // {면적, { ...[{ 거래일자, 거래량 }]}}
       let startYear = Number(this.data.buildYear);
-      startYear = startYear < 2015 ? 2015: startYear;
+      startYear = startYear < 2015 ? 2015 : startYear;
 
       let data = {};
-      for(let item of this.data.list) {
+      for (let item of this.data.list) {
         if (!data[item.area]) {
           data[item.area] = [];
-          for(let year = startYear; year<=2022; year++) {
-            data[item.area][year-startYear] = {label: `${year}년`, value: 0};
+          for (let year = startYear; year <= 2022; year++) {
+            data[item.area][year - startYear] = { label: `${year}년`, value: 0 };
           }
         }
-        data[item.area][item.dealYear-startYear].value++;
+        data[item.area][item.dealYear - startYear].value++;
       }
       return data;
     },
@@ -120,28 +120,28 @@ export default {
     getDealAmountData() {
       // {면적, { ...[{ 거래일자, 거래량 }]}}
       let startYear = Number(this.data.buildYear);
-      startYear = startYear < 2015 ? 2015: startYear;
+      startYear = startYear < 2015 ? 2015 : startYear;
 
       let data = {};
-      for(let item of this.data.list) {
+      for (let item of this.data.list) {
         if (!data[item.area]) {
           data[item.area] = [];
-          for(let year = startYear; year<=2022; year++) {
-            data[item.area][year-startYear] = {label: `${year}년`, value: 0, count: 0};
+          for (let year = startYear; year <= 2022; year++) {
+            data[item.area][year - startYear] = { label: `${year}년`, value: 0, count: 0 };
           }
         }
-        data[item.area][item.dealYear-startYear].count++;
-        data[item.area][item.dealYear-startYear].value += Number(item.dealAmount.split(",").join(""));
+        data[item.area][item.dealYear - startYear].count++;
+        data[item.area][item.dealYear - startYear].value += Number(item.dealAmount.split(",").join(""));
       }
-      for(let area in data) {
-        for (let i=0; i<data[area].length; i++){
-          if(data[area][i].count) data[area][i].value /= data[area][i].count;
-          data[area][i].value = Math.round(data[area][i].value)
+      for (let area in data) {
+        for (let i = 0; i < data[area].length; i++) {
+          if (data[area][i].count) data[area][i].value /= data[area][i].count;
+          data[area][i].value = Math.round(data[area][i].value);
         }
       }
-      console.log(data)
+      console.log(data);
       return data;
-    }
+    },
   },
   computed: {
     ...mapState("AptStore", ["target", "aptCode"]),
@@ -190,13 +190,12 @@ export default {
     data() {
       this.amountData = this.getDealAmountData();
       this.countData = this.getDealCountData();
-    }
+    },
   },
-  created() {
-  },
+  created() {},
   mounted() {
     if (this.target) this.setData();
-  }
+  },
 };
 </script>
 
@@ -205,7 +204,7 @@ export default {
   position: relative;
   flex-grow: 1;
   height: 100%;
-  min-width: 500px;
+  min-width: 550px;
 }
 .container > div {
   overflow-y: scroll;
