@@ -64,7 +64,7 @@ header {
   justify-content: center;
   border-bottom: 1px solid var(--shadow);
 }
-header * {
+.nav-user {
   color:var(--white);
 }
 .outline {
