@@ -3,6 +3,7 @@
     <div class="title-container">
       <span>제목</span>
       <input v-model="title" />
+      <checkbox-button :value="type" position="left" text="필독 여부" @event="toggleType" />
     </div>
     <tip-tap :value="content" @input="setContent" />
     <div class="btn-container">
@@ -16,15 +17,18 @@
 import TipTap from "@/components/common/tiptap/TipTap.vue";
 import { addNotice, getNoticeDetail, modifyNotice } from "@/api/notice";
 import RoundButton from "../common/RoundButton.vue";
+import CheckboxButton from "../common/CheckboxButton.vue";
 
 export default {
   name: "noticeModify",
   components: {
     TipTap,
     RoundButton,
+    CheckboxButton,
   },
   data() {
     return {
+      type: false,
       editor: null,
       no: null,
       title: "",
@@ -32,6 +36,9 @@ export default {
     };
   },
   methods: {
+    toggleType() {
+      this.type = !this.type;
+    },
     setContent(value) {
       this.content = value;
     },
@@ -39,7 +46,7 @@ export default {
       this.$router.push(`/notice/list`);
     },
     async submitNotice() {
-      let body = { no: this.no, title: this.title, content: this.content };
+      let body = { no: this.no, title: this.title, content: this.content, type: this.type ? 1 : 0 };
       const resolve = (res) => {
         if (res.status === 200) this.$router.push(`/notice/detail/${res.data}`);
       };
