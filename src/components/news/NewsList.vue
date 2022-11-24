@@ -34,7 +34,8 @@ export default {
     addList(list) {
       this.list = [...this.list, ...list];
     },
-    getList() {
+    async getList() {
+      console.log("ghcnf")
       let params = {
         query: this.query,
         display: this.display,
@@ -49,12 +50,14 @@ export default {
       const reject = (error) => {
         console.log(error);
       };
-      getNews(params, resolve, reject);
+      await getNews(params, resolve, reject);
+      console.log("done")
     },
-    scrollEvent() {
-      if (this.$refs.list.scrollHeight - window.scrollY < 800) {
-        this.getList();
-      }
+
+    scrollEvent($event) {
+      let {scrollY, innerHeight} = $event.currentTarget;
+      let {scrollHeight} = this.$refs.list;
+      if(scrollHeight - scrollY < innerHeight) this.getList();
     },
   },
   created() {
