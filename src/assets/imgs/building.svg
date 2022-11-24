@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with Vectornator (http://vectornator.io/) -->
+<svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 1280 500" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<filter color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="610" id="Filter" width="651.562" x="658.437" y="95.1563">
+<feDropShadow dx="-4.37114e-07" dy="-10" flood-color="#000000" flood-opacity="0.327296" in="SourceGraphic" result="Shadow" stdDeviation="15"/>
+</filter>
+<filter color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="511.906" id="Filter_2" width="733.781" x="-30" y="120.75">
+<feDropShadow dx="-4.37114e-07" dy="-10" flood-color="#000000" flood-opacity="0.327296" in="SourceGraphic" result="Shadow" stdDeviation="15"/>
+</filter>
+</defs>
+<clipPath id="ArtboardFrame">
+<rect height="500" width="1280" x="0" y="0"/>
+</clipPath>
+<g clip-path="url(#ArtboardFrame)" id="레이어-1">
+<g opacity="1"/>
+<path d="M1086.25 567.438L1086.25 590.969L1103.72 590.969L1103.72 567.438L1086.25 567.438Z" fill="#000000" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M1086.25 567.438L1086.25 590.969L1103.72 590.969L1103.72 567.438L1086.25 567.438Z" fill="#000000" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M728.094 135.156L728.094 256L688.438 256L688.438 581.031L790.719 581.031L790.719 571.875L833.844 571.875L833.844 552.656L885.781 552.656L885.781 611.156L967.844 611.156L967.844 560.031L1024.34 560.031L1024.34 590.969L1086.25 590.969L1086.25 567.438L1103.72 567.438L1103.72 590.969L1086.25 590.969L1086.25 685.156L1227.5 685.156L1227.5 646.125L1280 646.125L1280 188.688L1189.84 188.688L1189.84 327.281L1158.78 327.281L1158.78 236.469L1060.56 236.469L1060.56 383.781L1039.16 383.781L1039.16 183.312L938.25 183.312L938.25 325.938L927.25 325.938L927.25 234.188L833.844 234.188L833.844 135.156L728.094 135.156Z" fill="#000000" fill-rule="nonzero" filter="url(#Filter)" stroke="none"/>
+<path d="M209.5 160.75L209.5 350.781L170.719 350.781L170.719 270.219L100.344 270.219L100.344 196.938L0 196.938L0 612.656L100.344 612.656L100.344 562.031L140 562.031L140 599.844L242.469 599.844L242.469 505.312L302.75 505.312L302.75 528.469L362.031 528.469L362.031 578.875L462.219 578.875L462.219 552.781L490.094 552.781L490.094 602.281L590 602.281L590 587.094L637.781 587.094L637.781 571.625L673.781 571.625L673.781 317.156L637.781 317.156L637.781 219.844L547.281 219.844L547.281 394.469L517.656 394.469L517.656 208.625L462.219 208.625L462.219 178.531L362.031 178.531L362.031 287.406L317.719 287.406L317.719 160.75L209.5 160.75Z" fill="#000000" fill-rule="nonzero" filter="url(#Filter_2)" stroke="none"/>
+</g>
+</svg>

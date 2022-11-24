@@ -1,19 +1,41 @@
 <template>
   <main class="home">
-    <div class="background"></div>
+    <div class="background">
+      <div class="back-building pre" v-html="background"></div>
+      <div class="back-building" v-html="background"></div>
+      <div class="back-building next" v-html="background"></div>
+      <div class="front-building pre" v-html="background"></div>
+      <div class="front-building" v-html="background"></div>
+      <div class="front-building next" v-html="background"></div>
+    </div>
   </main>
 </template>
 
 <script>
+import building from "@/assets/imgs/building";
 export default {
   name: "HomeView",
   data() {
-    return {};
+    return {
+      background: building,
+    };
   },
 };
 </script>
 
 <style scoped>
+@keyframes displace {
+  from { margin-left: 100%;}
+  to { margin-left: 0}
+}
+@keyframes displace-pre {
+  from { margin-left: 0}
+  to { margin-left: -100%}
+}
+@keyframes displace-next {
+  from { margin-left: 200%}
+  to { margin-left: 100%}
+}
 .background {
   width: 100%;
   height: 680px;
@@ -21,19 +43,21 @@ export default {
   position: relative;
   overflow: hidden;
 }
-.background::before {
-  content: "HOME:IN HOME:IN HOME:IN HOME:IN HOME:IN HOME:IN HOME:IN HOME:IN HOME:IN HOME:IN HOME:IN HOME:IN";
-  width: 140%;
-  color: var(--navy);
-  flex-wrap: wrap;
-  font-weight: 900;
-  font-size: 260px;
-  line-height: 210px;
+.back-building {
+  width: 80%;
+  height: 480px;
   position: absolute;
-  top: -40%;
-  left: -20%;
-  text-shadow: 5px 10px 25px var(--black);
-  opacity: 0.25;
-  transform: rotate(-15deg);
+}
+.front-building {
+  width: 100%;
+  height: 680px;
+  position: absolute;
+  animation: displace 10s linear infinite;
+}
+.pre{
+  animation-name: displace-pre;
+}
+.next{
+  animation-name: displace-next;
 }
 </style>
