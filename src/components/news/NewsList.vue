@@ -30,6 +30,8 @@ export default {
   methods: {
     setQuery(value) {
       this.query = value;
+      this.list = [];
+      this.getList();
     },
     addList(list) {
       this.list = [...this.list, ...list];
